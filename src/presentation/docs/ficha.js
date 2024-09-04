@@ -36,7 +36,7 @@ function BuildFicha(dataCB, endCB, data) {
         if (data.picture != null) {
             const picture = data.picture.split("3000");
             const path = "." + picture[1];
-            doc.image(path, 442, 65, {
+            doc.image(data.picture, 442, 65, {
                 width: 140,
                 height: 140,
                 fit: [160, 140],

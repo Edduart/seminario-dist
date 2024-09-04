@@ -19,8 +19,7 @@ function BuildFichaInstructor(dataCB, endCB, data) {
     doc.text("DATOS DEL INSTRUCTOR", 45, 47, { align: 'center' });
     try {
         doc.image('./images/assests/seminary.icon.png', 55, 65, {
-            fit: [100, 100],
-            align: 'right',
+            fit: [100, 100], align: 'right',
         });
     }
     catch (error) {
@@ -34,13 +33,7 @@ function BuildFichaInstructor(dataCB, endCB, data) {
     doc.text("NOMBES: ", 172, 74, { continued: true }).text(data.forename);
     try {
         if (data.picture != null) {
-            const picture = data.picture.split("3000");
-            const path = "." + picture[1];
-            doc.image(path, 442, 65, {
-                width: 140,
-                height: 140,
-                fit: [160, 140],
-            });
+            doc.image(data.picture, 442, 65, { width: 140, height: 140, fit: [160, 140], });
         }
         else {
             doc.text('instructor no tiene foto', 442, 65);
