@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const testScore_controller_1 = require("../testScore/testScore.controller");
+const datasource_1 = require("../../infrastructure/datasource/");
+const repositories_1 = require("../../infrastructure/repositories/");
+const router = (0, express_1.Router)();
+const dataSource = new datasource_1.TestScoreDataSourceImpl();
+const testScoreRepository = new repositories_1.TestScoreRepositoryImpl(dataSource);
+const testScoreController = new testScore_controller_1.TestScoreController(testScoreRepository);
+router.post("/", testScoreController.create);
+router.get("/", testScoreController.get);
+router.put("/", testScoreController.update);
+module.exports = router;

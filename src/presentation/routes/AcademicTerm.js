@@ -1,0 +1,18 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const infrastructure_1 = require("../../infrastructure");
+const AcademicTerm_1 = require("../academic_Term/AcademicTerm");
+const router = (0, express_1.Router)();
+const enrollmentDataSource = new infrastructure_1.EnrollmentDataSourceImpl();
+const enrollmentRepository = new infrastructure_1.EnrollmentRepositoryImpl(enrollmentDataSource);
+const datasource = new infrastructure_1.AcademicTermDataSourceImpl();
+const courseRepository = new infrastructure_1.AcademicTermRepositoryImpl(datasource);
+const Controller = new AcademicTerm_1.AcademicTermController(courseRepository, enrollmentRepository);
+router.post("/", Controller.Create);
+router.get("/", Controller.Get);
+router.get("/:id", Controller.Getid);
+router.put("/", Controller.Update);
+router.delete("/delete/:id", Controller.Deactivate);
+router.put("/activate/:id", Controller.Activate);
+module.exports = router;

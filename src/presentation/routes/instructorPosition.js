@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const instructiorPosition_controller_1 = require("../InstructorPosition/instructiorPosition.controller");
+const infrastructure_1 = require("../../infrastructure/");
+const infrastructure_2 = require("../../infrastructure/");
+const router = (0, express_1.Router)();
+const datasource = new infrastructure_1.InstructorPositionDataSourceImple();
+const instructorPositionRepository = new infrastructure_2.InstructorPositionRepositoryImpl(datasource);
+const instructorPositionController = new instructiorPosition_controller_1.InstructorPositionController(instructorPositionRepository);
+router.get("/", instructorPositionController.getInstructorPositions);
+router.get("/:id", instructorPositionController.getinstructorPositionById);
+module.exports = router;

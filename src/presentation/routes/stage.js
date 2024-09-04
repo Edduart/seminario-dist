@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const stage_controller_1 = require("../stage/stage.controller");
+const infrastructure_1 = require("../../infrastructure/");
+const infrastructure_2 = require("../../infrastructure/");
+const router = (0, express_1.Router)();
+const datasource = new infrastructure_1.StageDataSourceImple();
+const stageRepository = new infrastructure_2.StageRepositoryImpl(datasource);
+const stageController = new stage_controller_1.StageController(stageRepository);
+router.get("/", stageController.getStages);
+router.get("/:id", stageController.getStageById);
+module.exports = router;

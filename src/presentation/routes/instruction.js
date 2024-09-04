@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const infrastructure_1 = require("../../infrastructure");
+const instruction_repository_1 = require("../../infrastructure/repositories/instruction.repository");
+const instruction_controller_1 = require("../instruction/instruction_controller");
+const router = (0, express_1.Router)();
+const datasource = new infrastructure_1.InstructionDataSourceImple();
+const instructionRepository = new instruction_repository_1.InstructionRepositoryImpl(datasource);
+const instructionController = new instruction_controller_1.InstructionController(instructionRepository);
+router.get('/', instructionController.get);
+router.put('/', instructionController.create);
+module.exports = router;

@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const TokenValidator_1 = require("../services/TokenValidator");
+const extra_controller_1 = require("../extra/extra.controller");
+const router = (0, express_1.Router)();
+const extraControl = new extra_controller_1.ExtraController();
+router.get("/blood/", TokenValidator_1.ValidatorTo.ValidarToken, extraControl.Blood);
+router.get("/work/", TokenValidator_1.ValidatorTo.ValidarToken, extraControl.Work);
+router.get("/instructors/", TokenValidator_1.ValidatorTo.ValidarToken, extraControl.GetInstructors);
+router.get("/get-enrollment-status/", TokenValidator_1.ValidatorTo.ValidarToken, extraControl.getEnrollmentStatusEnum);
+module.exports = router;

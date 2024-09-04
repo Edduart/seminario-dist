@@ -1,0 +1,62 @@
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+__exportStar(require("./role"), exports);
+__exportStar(require("./diocese"), exports);
+__exportStar(require("./parish"), exports);
+__exportStar(require("./course"), exports);
+__exportStar(require("./instructor"), exports);
+__exportStar(require("./seminarian"), exports);
+__exportStar(require("./subject"), exports);
+__exportStar(require("./person"), exports);
+__exportStar(require("./user"), exports);
+__exportStar(require("./phone/phone.create"), exports);
+__exportStar(require("./professor/createProfessor.dto"), exports);
+__exportStar(require("./degree/create.degree"), exports);
+__exportStar(require("./socialmedia/socialmedia.create"), exports);
+__exportStar(require("./worker/create.worker"), exports);
+__exportStar(require("./user/login"), exports);
+__exportStar(require("./phone/phone.create"), exports);
+__exportStar(require("./socialmedia/socialmedia.create"), exports);
+__exportStar(require("./worker/create.worker"), exports);
+__exportStar(require("./parish/createParish.dto"), exports);
+__exportStar(require("./parish/updateParish.dto"), exports);
+__exportStar(require("./course/createCourse.dto"), exports);
+__exportStar(require("./course/updateCourse.dto"), exports);
+__exportStar(require("./instructor/createInstructor.dto"), exports);
+__exportStar(require("./instructor/updateInstructor.dto"), exports);
+;
+__exportStar(require("./professor"), exports);
+__exportStar(require("./user/createUser.dto"), exports);
+;
+__exportStar(require("./user/user.trans"), exports);
+__exportStar(require("./user/login"), exports);
+__exportStar(require("./parish/updateParish.dto"), exports);
+__exportStar(require("./person/create.person"), exports);
+__exportStar(require("./socialmedia/socialmedia.create"), exports);
+__exportStar(require("./degree/create.degree"), exports);
+__exportStar(require("./seminarian/create.seminarian"), exports);
+__exportStar(require("./user/create.user"), exports);
+__exportStar(require("./seminarian/create.Foreing.seminarian"), exports);
+__exportStar(require("./user/update.user"), exports);
+__exportStar(require("./seminarian/update.seminarian"), exports);
+__exportStar(require("./seminarian/get.seminarian"), exports);
+__exportStar(require("./academic_term"), exports);
+__exportStar(require("./instruction"), exports);
+__exportStar(require("./enrollment"), exports);
+__exportStar(require("./bitacora/get"), exports);
+__exportStar(require("./test"), exports);
+__exportStar(require("./testScore"), exports);

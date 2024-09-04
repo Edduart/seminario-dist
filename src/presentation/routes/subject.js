@@ -1,0 +1,18 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const infrastructure_1 = require("../../infrastructure");
+const subject_controler_1 = require("../subject/subject.controler");
+const TokenValidator_1 = require("../services/TokenValidator");
+const router = (0, express_1.Router)();
+const datasource = new infrastructure_1.SubjectDataSourceImpl();
+const Repository = new infrastructure_1.SubjectRepositoryImpl(datasource);
+const subControl = new subject_controler_1.SubjectControler(Repository);
+router.get('/pensum', subControl.Pensum);
+router.put('/', TokenValidator_1.ValidatorTo.ValidarToken, subControl.Update);
+router.post('/', TokenValidator_1.ValidatorTo.ValidarToken, subControl.Create);
+router.get('/', TokenValidator_1.ValidatorTo.ValidarToken, subControl.Get);
+router.get('/fields', TokenValidator_1.ValidatorTo.ValidarToken, subControl.Get_Field);
+router.get('/inst', subControl.Get_inst);
+router.delete('/:id', TokenValidator_1.ValidatorTo.ValidarToken, subControl.Delete);
+module.exports = router;

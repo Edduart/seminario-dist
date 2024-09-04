@@ -1,0 +1,18 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const parish_controller_1 = require("../parish/parish.controller");
+const parish_datasource_impl_1 = require("../../infrastructure/datasource/parish.datasource.impl");
+const parish_repository_imple_1 = require("../../infrastructure/repositories/parish.repository.imple");
+const router = (0, express_1.Router)();
+const datasource = new parish_datasource_impl_1.ParishDatasourceimpl();
+const parishRepository = new parish_repository_imple_1.ParishRepositoryImpl(datasource);
+const parishController = new parish_controller_1.ParishController(parishRepository);
+router.post("/", parishController.createParish);
+router.get("/", parishController.getParishes);
+router.get("/:id", parishController.GetParishById);
+router.get("/search-by-diocese/:id", parishController.getByDioceseId);
+router.get("/search/:name", parishController.getParishByname);
+router.put("/:id", parishController.UpdateParishById);
+router.delete("/:id", parishController.deleteParishById);
+module.exports = router;
