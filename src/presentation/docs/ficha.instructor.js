@@ -33,7 +33,13 @@ function BuildFichaInstructor(dataCB, endCB, data) {
     doc.text("NOMBES: ", 172, 74, { continued: true }).text(data.forename);
     try {
         if (data.picture != null) {
-            doc.image(data.picture, 442, 65, { width: 140, height: 140, fit: [160, 140], });
+            const picture = data.picture.split("images");
+            const path = ".images" + picture[1];
+            doc.image(data.picture, 442, 65, {
+                width: 140,
+                height: 140,
+                fit: [160, 140],
+            });
         }
         else {
             doc.text('instructor no tiene foto', 442, 65);
