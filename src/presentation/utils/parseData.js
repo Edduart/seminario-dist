@@ -41,7 +41,7 @@ function parseUserData(req, person) {
             const origin = yield JSON.parse(req);
             const hashedPassword = yield (0, hash_handler_1.encode)(origin.persona.id);
             const degrees = origin.user.degree != null
-                ? origin.user.degree.map((degree_Actual) => new domain_1.CreateDegree(origin.persona.id, degree_Actual.description, degree_Actual.link))
+                ? origin.user.degree.map((degree_Actual) => new domain_1.CreateDegree(origin.persona.id, degree_Actual.description.toUpperCase(), degree_Actual.link))
                 : undefined;
             const userData = new domain_1.CreateUserDTO(person, degrees, origin.user.parish_id, origin.user.role, hashedPassword);
             return userData;
