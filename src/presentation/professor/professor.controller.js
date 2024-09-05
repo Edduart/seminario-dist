@@ -16,11 +16,13 @@ exports.ProfessorController = void 0;
 const domain_1 = require("../../domain");
 const parseData_1 = require("../utils/parseData");
 const fs_1 = __importDefault(require("fs"));
+const imageManipulation_1 = require("../../presentation/utils/imageManipulation");
 class ProfessorController {
     constructor(repository, instructorPositionRepo) {
         this.repository = repository;
         this.instructorPositionRepo = instructorPositionRepo;
         this.update = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            console.log(req.baseUrl);
             const isInstructor = yield (0, parseData_1.parseInstructorData)(req.body.data);
             const personData = yield (0, parseData_1.parsePersonData)(req.body.data, req.body.ayuda);
             const { userData } = yield (0, parseData_1.parseUserDataUpdate)(req.body.data);
@@ -84,9 +86,7 @@ class ProfessorController {
             if (isInstructor) {
                 const [error, createInstructor] = domain_1.CreateInstructorDto.create(isInstructor);
                 if (error) {
-                    if (req.body.ayuda != null) {
-                        fs_1.default.unlinkSync(req.body.ayuda);
-                    }
+                    fs_1.default.unlinkSync(req.body.ayuda);
                     return res.status(400).json({ error });
                 }
                 else {
@@ -94,11 +94,11 @@ class ProfessorController {
                     dtoCreateInstructor = createInstructor;
                 }
             }
+            console.log(req.body.ayuda);
+            yield (0, imageManipulation_1.imageResize)(req.body.ayuda);
             const dataValidationErrors = professorData.Validate();
             if (dataValidationErrors) {
-                if (req.body.ayuda != null) {
-                    fs_1.default.unlinkSync(req.body.ayuda);
-                }
+                fs_1.default.unlinkSync(req.body.ayuda);
                 return res.status(400).send("Error: " + dataValidationErrors);
             }
             yield new domain_1.CreateProfessorUseCase(this.repository)

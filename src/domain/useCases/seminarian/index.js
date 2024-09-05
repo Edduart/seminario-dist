@@ -20,3 +20,4 @@ __exportStar(require("./delete.seminarian"), exports);
 __exportStar(require("./getSeminarian"), exports);
 __exportStar(require("./getid"), exports);
 __exportStar(require("./getFicha"), exports);
+__exportStar(require("./getculminado"), exports);

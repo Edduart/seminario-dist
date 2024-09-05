@@ -11,6 +11,7 @@ class CreateTestDto {
         let { subject_id, academic_term_id, tests } = props;
         let validationErrors = [];
         console.log({ props });
+        tests.description = tests.description.toupp;
         if (validationErrors.length > 0) {
             console.error("CreateEnrollmentDto", { validationErrors });
             return [validationErrors];

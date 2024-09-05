@@ -143,6 +143,42 @@ class SeminarianDataSourceImpl {
     getByID(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield postgres_1.prisma.seminarian.findFirst({ where: {
+                    user: { person_id: id },
+                    enrollment: {
+                        some: {
+                            status: client_1.enrollment_status.CURSANDO
+                        }
+                    }
+                }, include: {
+                    user: { include: { person: true } },
+                    enrollment: { include: {
+                            academic_term: true
+                        } }
+                } });
+            let stage = "";
+            switch (result === null || result === void 0 ? void 0 : result.stage) {
+                case 1:
+                    stage = "Propedéutico";
+                    break;
+                case 2:
+                    stage = "Discipulado";
+                    break;
+                case 3:
+                    stage = "Configurativa";
+                    break;
+            }
+            const year = result === null || result === void 0 ? void 0 : result.enrollment[0].academic_term.end_date.getFullYear().toString();
+            if (result == null)
+                throw new Error("Seminarian does not exists");
+            const document = domain_1.DocumenDTO.fromdb({ id: result.user.person.id, forename: result.user.person.forename, surname: result.user.person.surname });
+            document.stage = stage;
+            document.period = result.enrollment[0].academic_term.start_date.getFullYear().toString() + " - " + result.enrollment[0].academic_term.end_date.getFullYear().toString();
+            return document;
+        });
+    }
+    getByIDCulminado(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield postgres_1.prisma.seminarian.findFirst({ where: {
                     status: client_1.seminarian_status.CULMINADO,
                     user: { person_id: id }
                 }, include: { user: { include: { person: true } } } });

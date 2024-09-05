@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BuildConstance = void 0;
 const pdfkit_1 = __importDefault(require("pdfkit"));
 const Notas_Certificadas_1 = require("./Notas.Certificadas");
-function BuildConstance(dataCB, endCB, infor, surname, forename, period, etapa) {
+function BuildConstance(dataCB, endCB, infor, surname, forename, period, etapa, nombre_emisor, cedula_emisor) {
     const doc = new pdfkit_1.default({ font: 'Times-Roman' });
     try {
         doc.image("./images/assests/backgpround.png", 110, 150, {
@@ -85,8 +85,8 @@ function BuildConstance(dataCB, endCB, infor, surname, forename, period, etapa) 
     doc.moveDown();
     doc.moveDown();
     doc.moveDown();
-    doc.font('Times-Bold', 12).text('Pbro. Lcdo. Frank Reinaldo Dorante Boquett', { align: 'center' });
-    doc.font('Times-Bold', 12).text('V-********', { align: 'center' });
+    doc.font('Times-Bold', 12).text(nombre_emisor, { align: 'center' });
+    doc.font('Times-Bold', 12).text(cedula_emisor, { align: 'center' });
     doc.font('Times-Bold', 12).text('Rector', { align: 'center' });
     doc.moveDown();
     doc.moveDown();

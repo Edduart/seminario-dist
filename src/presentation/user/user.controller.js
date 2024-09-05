@@ -72,7 +72,7 @@ class UserControler {
                     }
                     else {
                         (0, infrastructure_1.ActualizarFecha)(user.person_id);
-                        const user_to_send = new domain_1.UserTrans(user.person_id, user.role.premissions, user.fecha, user.role.name);
+                        const user_to_send = new domain_1.UserTrans(user.person_id, user.role.premissions, user.fecha, user.role.name, user.forename, user.surname, user.profile_picture);
                         const token = jsonwebtoken_1.default.sign(Object.assign({}, user_to_send), process.env.SECRET, { expiresIn: "30m" });
                         const datasource = new bitacora_datasource_imple_1.BitacoraDataSourceImpl();
                         const Repository = new bitacora_repository_imple_1.BitacoraRepositoryImpl(datasource);

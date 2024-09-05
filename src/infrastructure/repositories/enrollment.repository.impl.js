@@ -5,6 +5,9 @@ class EnrollmentRepositoryImpl {
     constructor(dataSource) {
         this.dataSource = dataSource;
     }
+    getAcademicTermByEnrollment(dto) {
+        return this.dataSource.getAcademicTermByEnrollment(dto);
+    }
     getSubjectsToEnroll(dto) {
         return this.dataSource.getSubjectsToEnroll(dto);
     }

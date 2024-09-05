@@ -5,6 +5,17 @@ const domain_1 = require("../../domain");
 class EnrollmentController {
     constructor(repository) {
         this.repository = repository;
+        this.getAcademicTermByEnrollment = (req, res) => {
+            const [error, getDto] = domain_1.GetAcademicTermByEnrollmentDto.get(req.query);
+            if (error)
+                return res.status(400).json({ msj: "Data validation errors", error });
+            new domain_1.GetAcademicTermByEnrollment(this.repository)
+                .execute(getDto)
+                .then((enrollment) => res
+                .set({ "Access-Control-Expose-Headers": "auth" })
+                .json({ enrollment }))
+                .catch((error) => res.status(400).json({ error }));
+        };
         this.getSubjectAllowToEnrollEquivalency = (req, res) => {
             const seminarian_id = req.params.seminarian_id;
             const [error, createDto] = domain_1.SubjectAllowToEnrollEquivalencyDto.get({

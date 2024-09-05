@@ -124,6 +124,7 @@ class UserDataSourceImplementation {
                     AND: [{ person_id: data.person_id }, { status: true }],
                 },
                 include: {
+                    person: true,
                     role: {
                         include: {
                             role_permission: {
@@ -150,7 +151,7 @@ class UserDataSourceImplementation {
                     description: usuario.role.description,
                     premissions: permissions,
                 });
-                return new domain_1.UserEntity(usuario.person_id, true, usuario.password, role, usuario.LastIn);
+                return new domain_1.UserEntity(usuario.person_id, true, usuario.password, role, usuario.LastIn, usuario.person.forename, usuario.person.surname, usuario.person.profile_picture_path);
             });
             return resultado[0];
         });

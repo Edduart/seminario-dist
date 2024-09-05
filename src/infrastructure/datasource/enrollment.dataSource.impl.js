@@ -16,7 +16,48 @@ const subjectEnrollmentFilter_1 = require("./utils/subjectEnrollmentFilter");
 const getStageOfSeminarianFilter_1 = require("./utils/getStageOfSeminarianFilter");
 const calculateScore_1 = require("./utils/calculateScore");
 const calculateIfSeminarianApproveStage_1 = require("./utils/calculateIfSeminarianApproveStage");
+const formatDate_1 = require("../../presentation/utils/formatDate");
 class EnrollmentDataSourceImpl {
+    getAcademicTermByEnrollment(dto) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log(dto.seminarian_id);
+            const seminarianAcademicTerm = yield postgres_1.prisma.seminarian.findMany({
+                where: {
+                    id: dto.seminarian_id,
+                    enrollment: { some: { seminarian_id: dto.seminarian_id } },
+                },
+                select: { id: true, enrollment: { include: { academic_term: true } } },
+            });
+            console.log(seminarianAcademicTerm);
+            const removeRepeated = seminarianAcademicTerm.map((seminarian) => {
+                const seenIds = new Set();
+                return {
+                    seminarian: seminarian.id,
+                    enrollment: seminarian.enrollment.filter((enrollment) => {
+                        const id = enrollment.academic_term.id;
+                        if (!seenIds.has(id)) {
+                            seenIds.add(id);
+                            return true;
+                        }
+                        return false;
+                    }),
+                };
+            });
+            console.log(removeRepeated);
+            const academicTermMap = removeRepeated.flatMap((seminarian) => ({
+                seminarian_id: seminarian.seminarian,
+                academic_term: seminarian.enrollment.map((enrollment) => ({
+                    academic_term_id: enrollment.academic_term.id,
+                    academic_term_semester: enrollment.academic_term.semester,
+                    academic_term_start_date: (0, formatDate_1.formatDate)(enrollment.academic_term.start_date.toISOString()),
+                    academic_term_end_date: (0, formatDate_1.formatDate)(enrollment.academic_term.end_date.toISOString()),
+                    academic_term_status: enrollment.academic_term.status,
+                })),
+            }));
+            console.log(academicTermMap);
+            return academicTermMap;
+        });
+    }
     getSubjectsToEnroll(dto) {
         return __awaiter(this, void 0, void 0, function* () {
             const checkSeminarian = yield postgres_1.prisma.seminarian.findUnique({

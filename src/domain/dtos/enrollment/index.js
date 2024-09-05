@@ -22,3 +22,4 @@ __exportStar(require("./getStageOfSemanarians.dto"), exports);
 __exportStar(require("./deleteEnrollment.dto"), exports);
 __exportStar(require("./createEnrollmentByEquivalence.dto"), exports);
 __exportStar(require("./getSubjectToEnrollEquivalency.dto"), exports);
+__exportStar(require("./getAcademicTermByEnrollment.dto"), exports);

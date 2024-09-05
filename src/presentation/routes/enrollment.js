@@ -11,6 +11,7 @@ const enrollmentController = new enrollment_controller_1.EnrollmentController(en
 router.get("/academic-status/:seminarian_id", enrollmentController.getAcademicStatus);
 router.get("/seminarian-stage/", enrollmentController.getStageOfSeminarian);
 router.get("/equivalency-list/:seminarian_id", enrollmentController.getSubjectAllowToEnrollEquivalency);
+router.get("/seminarian-academic-term/", enrollmentController.getAcademicTermByEnrollment);
 router.post("/create-by-equivalence/", enrollmentController.createEnrollmentByEquivalence);
 router.post("/", enrollmentController.create);
 router.get("/", enrollmentController.get);

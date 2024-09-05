@@ -11,24 +11,24 @@ const dataSource = new infrastructure_1.ProfessorDataSourceImpl();
 const repository = new infrastructure_1.ProfessorRepositoryImpl(dataSource);
 const professorController = new professor_controller_1.ProfessorController(repository, instructorRepository);
 router.get("/", professorController.get);
-router.post("/:id", (req, res, next) => {
+router.post("/:id", (req, res) => {
     upload_service_1.uploadFile.single("file")(req, res, (err) => {
         if (err) {
-            return res
-                .status(500)
-                .json({ msj: "Unexpected error on the image file", error: err });
+            res.status(400).json({ ImageError: err.message });
         }
         else {
+            if (!req.file) {
+                req.body.ayuda = "./images" + req.baseUrl + req.url;
+                console.log("no file", req.body.ayuda);
+            }
             professorController.create(req, res);
         }
     });
 });
-router.put("/:id", (req, res, next) => {
+router.put("/:id", (req, res) => {
     upload_service_1.updateFile.single("file")(req, res, (err) => {
         if (err) {
-            return res
-                .status(500)
-                .json({ msj: "Unexpected error on the image file", error: err });
+            res.status(400).json({ ImageError: err.message });
         }
         else {
             professorController.update(req, res);

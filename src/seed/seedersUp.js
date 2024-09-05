@@ -168,7 +168,25 @@ function main() {
                         create: {
                             subject_id: i,
                             academic_term_id: 1,
-                        },
+                        }, include: {}
+                    });
+                }
+                yield delay(1000);
+                for (let i = 1; i < data_1.subjectNO.length; i++) {
+                    yield postgres_1.prisma.test.upsert({
+                        where: {
+                            academic_term_id_subject_id: {
+                                academic_term_id: 1,
+                                subject_id: i
+                            }
+                        }, update: {},
+                        create: {
+                            academic_term_id: 1,
+                            subject_id: i,
+                            description: "EXAMEN UNICO",
+                            status: true,
+                            maximum_score: 100.0
+                        }
                     });
                 }
                 console.log("seeder completed");

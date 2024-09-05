@@ -43,12 +43,12 @@ class SeminarianControler {
             });
         };
         this.getCartaCulminacione = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            new domain_1.GetByIDSeminarianUseCase(this.repository).execute(req.params.id).then((data) => {
+            new domain_1.GetByIDCulminadoSeminarianUseCase(this.repository).execute(req.params.id).then((data) => {
                 const line = res.writeHead(200, {
                     "Content-Type": "application/pdf",
                     "Content-Disposition": "inline; filename=CartaCulminacion.pdf"
                 });
-                (0, carta_culminacion_1.BuildPDF)((data) => line.write(data), () => line.end(), data.id, data.surname, data.forename);
+                (0, carta_culminacion_1.BuildPDF)((data) => line.write(data), () => line.end(), data.id, data.surname, data.forename, req.query.nombre, req.query.cedula);
             }).catch((error) => {
                 res.status(400).json({ error: "error encontrando el seminarista" + error }).send();
             });
@@ -59,7 +59,7 @@ class SeminarianControler {
                     "Content-Type": "application/pdf",
                     "Content-Disposition": "inline; filename=constance.pdf"
                 });
-                (0, constance_1.BuildConstance)((data) => line.write(data), () => line.end(), result.id, result.surname, result.forename, "2023-2024", "Discipulado");
+                (0, constance_1.BuildConstance)((data) => line.write(data), () => line.end(), result.id, result.surname, result.forename, result.period, result.stage, req.query.nombre, req.query.cedula);
             }).catch((error) => {
                 console.log(error);
                 res.send(error);

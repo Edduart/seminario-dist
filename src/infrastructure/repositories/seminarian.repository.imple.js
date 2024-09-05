@@ -5,6 +5,9 @@ class SeminarianRepositoryImpl {
     constructor(datasource) {
         this.datasource = datasource;
     }
+    getByIDCulminado(id) {
+        return this.datasource.getByIDCulminado(id);
+    }
     Ficha(id) {
         return this.datasource.Ficha(id);
     }

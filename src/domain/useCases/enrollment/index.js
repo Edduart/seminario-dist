@@ -24,3 +24,4 @@ __exportStar(require("./updateEnrollmentStatusByFinalScore"), exports);
 __exportStar(require("./updateStageIfApproved"), exports);
 __exportStar(require("./createByEnrollmentEquivalence"), exports);
 __exportStar(require("./getSubjectAllowToEnrollEquivalency"), exports);
+__exportStar(require("./getAcademicTermByEnrollment"), exports);

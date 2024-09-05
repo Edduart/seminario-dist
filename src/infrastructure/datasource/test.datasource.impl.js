@@ -252,7 +252,7 @@ class TestDataSourceImpl {
                     subject_id: dto.subject_id,
                     academic_term_id: dto.academic_term_id,
                     maximum_score: tests.maximum_score,
-                    description: tests.description,
+                    description: tests.description.toUpperCase(),
                 })),
             });
             return createTest;
