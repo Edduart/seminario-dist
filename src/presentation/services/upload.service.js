@@ -49,7 +49,7 @@ const CreateFileFilter = function (req, file, cb) {
         if (existingFile) {
             return cb(new Error(`File with the same name already exists ${existingFile}`));
         }
-        cb(null, true);
+        return cb(null, true);
     });
 };
 exports.uploadFile = (0, multer_1.default)({
@@ -59,16 +59,19 @@ exports.uploadFile = (0, multer_1.default)({
 });
 const UpdateFileFilter = function (req, file, cb) {
     return __awaiter(this, void 0, void 0, function* () {
+        const maxFileSize = 1000000;
         const allowedExtensions = [".jpg", ".jpeg", ".png"];
         const extension = path_1.default.extname(file.originalname).toLowerCase();
         if (!allowedExtensions.includes(extension)) {
             return cb(new Error("Only valid image files are allowed (JPG, JPEG, PNG)"));
         }
-        cb(null, true);
+        if (req.headers["content-length"] > maxFileSize) {
+            return cb(new Error("File size no more than 1MB"));
+        }
+        return cb(null, true);
     });
 };
 exports.updateFile = (0, multer_1.default)({
     storage: storage,
-    limits: { fileSize: 1000000 },
     fileFilter: UpdateFileFilter,
 });

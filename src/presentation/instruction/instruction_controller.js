@@ -11,10 +11,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.InstructionController = void 0;
 const domain_1 = require("../../domain");
+const permissionValidator_1 = require("../services/permissionValidator");
 class InstructionController {
     constructor(repository) {
         this.repository = repository;
         this.create = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "INSTRUCTOR", "C");
+            }
+            catch (error) {
+                return res.status(401).json("Not allowed" + error);
+            }
             const [errores, createinstruction] = domain_1.CreateInstruction.CreateDTO(req.body);
             if (errores != undefined) {
                 console.log("verification errors:" + errores);

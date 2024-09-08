@@ -21,53 +21,64 @@ const carta_culminacion_1 = require("../docs/carta_culminacion");
 const ficha_1 = require("../docs/ficha");
 const constance_1 = require("../docs/constance");
 const seminarianlist_1 = require("../docs/seminarianlist");
-const infrastructure_1 = require("../../infrastructure");
-const dataSource = new infrastructure_1.TestDataSourceImpl();
+const imageManipulation_1 = require("../../presentation/utils/imageManipulation");
 class SeminarianControler {
     constructor(repository) {
         this.repository = repository;
         this.ficha = (req, res) => {
-            new domain_1.SeminarianFichaUseCase(this.repository).execute(req.params.id).then((seminarians) => {
+            new domain_1.SeminarianFichaUseCase(this.repository)
+                .execute(req.params.id)
+                .then((seminarians) => {
                 try {
                     const line = res.writeHead(200, {
                         "Content-Type": "application/pdf",
-                        "Content-Disposition": "inline; filename=ficha.pdf"
+                        "Content-Disposition": "inline; filename=ficha.pdf",
                     });
                     (0, ficha_1.BuildFicha)((data) => line.write(data), () => line.end(), seminarians);
                 }
                 catch (errorID) {
                     res.status(418).json("unable to create ID: " + errorID);
                 }
-            }).catch((error) => {
+            })
+                .catch((error) => {
                 res.status(418).json("unable to create ID: " + error);
             });
         };
         this.getCartaCulminacione = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            new domain_1.GetByIDCulminadoSeminarianUseCase(this.repository).execute(req.params.id).then((data) => {
+            new domain_1.GetByIDCulminadoSeminarianUseCase(this.repository)
+                .execute(req.params.id)
+                .then((data) => {
                 const line = res.writeHead(200, {
                     "Content-Type": "application/pdf",
-                    "Content-Disposition": "inline; filename=CartaCulminacion.pdf"
+                    "Content-Disposition": "inline; filename=CartaCulminacion.pdf",
                 });
                 (0, carta_culminacion_1.BuildPDF)((data) => line.write(data), () => line.end(), data.id, data.surname, data.forename, req.query.nombre, req.query.cedula);
-            }).catch((error) => {
-                res.status(400).json({ error: "error encontrando el seminarista" + error }).send();
+            })
+                .catch((error) => {
+                res
+                    .status(400)
+                    .json({ error: "error encontrando el seminarista" + error })
+                    .send();
             });
         });
         this.GetConstance = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            new domain_1.GetByIDSeminarianUseCase(this.repository).execute(req.params.id).then((result) => {
+            new domain_1.GetByIDSeminarianUseCase(this.repository)
+                .execute(req.params.id)
+                .then((result) => {
                 const line = res.writeHead(200, {
                     "Content-Type": "application/pdf",
-                    "Content-Disposition": "inline; filename=constance.pdf"
+                    "Content-Disposition": "inline; filename=constance.pdf",
                 });
                 (0, constance_1.BuildConstance)((data) => line.write(data), () => line.end(), result.id, result.surname, result.forename, result.period, result.stage, req.query.nombre, req.query.cedula);
-            }).catch((error) => {
+            })
+                .catch((error) => {
                 console.log(error);
                 res.send(error);
             });
         });
         this.get = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "SEMINARIAN", 'R');
+                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "SEMINARIAN", "R");
                 const [error, get_dto] = domain_1.GetSeminarianDTO.CreateDTO(req.query);
                 if (error != undefined) {
                     console.log("verification errors:" + error);
@@ -75,9 +86,12 @@ class SeminarianControler {
                 }
                 else {
                     if (get_dto != undefined) {
-                        new domain_1.GetSeminarianUseCase(this.repository).execute(get_dto).then((seminarians) => {
+                        new domain_1.GetSeminarianUseCase(this.repository)
+                            .execute(get_dto)
+                            .then((seminarians) => {
                             res.json(seminarians).send;
-                        }).catch((error) => {
+                        })
+                            .catch((error) => {
                             res.status(418).send("unable to get seminarians: " + error);
                         });
                     }
@@ -89,15 +103,18 @@ class SeminarianControler {
         });
         this.delete = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "SEMINARIAN", 'D');
-                new domain_1.DeleteSeminarianUseCase(this.repository).execute(req.params.id).then((result) => {
-                    if (typeof result !== 'string') {
+                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "SEMINARIAN", "D");
+                new domain_1.DeleteSeminarianUseCase(this.repository)
+                    .execute(req.params.id)
+                    .then((result) => {
+                    if (typeof result !== "string") {
                         if (req.body.ayuda != null) {
                             fs_1.default.unlinkSync(req.body.ayuda);
                         }
                     }
                     res.json({ message: "seminarian deleted" }).send;
-                }).catch((error) => {
+                })
+                    .catch((error) => {
                     console.log("unexpected error while executing" + error);
                     res.status(400).send("Error deleting seminarian: " + error);
                 });
@@ -108,9 +125,9 @@ class SeminarianControler {
             }
         });
         this.update = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const source = req.headers['Permissions'];
+            const source = req.headers["Permissions"];
             try {
-                const result = (0, permissionValidator_1.ValidatePermission)(source, "SEMINARIAN", 'U');
+                const result = (0, permissionValidator_1.ValidatePermission)(source, "SEMINARIAN", "U");
                 const data = req.body.data;
                 const user_origin = yield JSON.parse(data);
                 const persondto = yield (0, parseData_1.parsePersonData)(data, req.body.ayuda);
@@ -121,35 +138,31 @@ class SeminarianControler {
                 const seminarian = new domain_1.UpdateSeminarian(foreingdata, user_origin.location, user_origin.apostleships, persondto, user_origin.ministery, user_origin.status, user_origin.stage);
                 const errores = seminarian.Validate();
                 if (errores == null) {
-                    new domain_1.UpdateSeminarianUseCase(this.repository).execute(seminarian).then((seminarian) => { res.json({ message: "ready" }).send; })
+                    new domain_1.UpdateSeminarianUseCase(this.repository)
+                        .execute(seminarian)
+                        .then(() => __awaiter(this, void 0, void 0, function* () {
+                        yield (0, imageManipulation_1.imageResize)(req.body.ayuda);
+                        res.json({ message: "ready" });
+                    }))
                         .catch((error) => {
-                        if (req.body.ayuda != null) {
-                            fs_1.default.unlinkSync(req.body.ayuda);
-                        }
                         console.log("unexpected error while executing" + error);
                         res.status(400).send("Unexpected error: " + error);
                     });
                 }
                 else {
-                    if (req.body.ayuda != null) {
-                        fs_1.default.unlinkSync(req.body.ayuda);
-                    }
                     console.log(errores);
                     res.status(400).send("Validation error: " + errores);
                 }
             }
             catch (error) {
-                if (req.body.ayuda != null) {
-                    fs_1.default.unlinkSync(req.body.ayuda);
-                }
                 console.log("unexpected error while executing");
                 res.status(418).send("Error: " + error);
             }
         });
         this.Create = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const source = req.headers['Permissions'];
+            const source = req.headers["Permissions"];
             try {
-                const result = (0, permissionValidator_1.ValidatePermission)(source, "SEMINARIAN", 'C');
+                const result = (0, permissionValidator_1.ValidatePermission)(source, "SEMINARIAN", "C");
                 const data = req.body.data;
                 const user_origin = yield JSON.parse(data);
                 const persondto = yield (0, parseData_1.parsePersonData)(data, req.body.ayuda);
@@ -162,28 +175,28 @@ class SeminarianControler {
                 const seminarian = new domain_1.CreateSeminarian(foreingdata, user_origin.location, user_origin.stage, user_origin.apostleships, user, user_origin.ministery);
                 const errores = seminarian.Validate();
                 if (errores == null) {
-                    new domain_1.CreateSeminarianUseCase(this.repository).execute(seminarian).then((seminarian) => {
+                    new domain_1.CreateSeminarianUseCase(this.repository)
+                        .execute(seminarian)
+                        .then((seminarian) => __awaiter(this, void 0, void 0, function* () {
+                        yield (0, imageManipulation_1.imageResize)(req.body.ayuda);
                         res.json({ message: "ready" }).send;
-                    })
+                    }))
                         .catch((error) => {
-                        if (req.body.ayuda != null) {
+                        if (fs_1.default.existsSync(req.body.ayuda))
                             fs_1.default.unlinkSync(req.body.ayuda);
-                        }
-                        res.status(400).send("Unexpected error: " + error);
+                        res.status(400).send("Unexpected " + error);
                     });
                 }
                 else {
-                    if (req.body.ayuda != null) {
+                    if (fs_1.default.existsSync(req.body.ayuda))
                         fs_1.default.unlinkSync(req.body.ayuda);
-                    }
                     console.log(errores);
                     res.status(400).send("Validation error: " + errores);
                 }
             }
             catch (error) {
-                if (req.body.ayuda != null) {
+                if (fs_1.default.existsSync(req.body.ayuda))
                     fs_1.default.unlinkSync(req.body.ayuda);
-                }
                 console.log("unexpected error while executing");
                 console.log("error mientrs se ejecuta");
                 res.status(418).send("Error: " + error);
@@ -191,7 +204,7 @@ class SeminarianControler {
         });
         this.CreateList = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "SEMINARIAN", 'R');
+                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "SEMINARIAN", "R");
                 const [error, get_dto] = domain_1.GetSeminarianDTO.CreateDTO(req.query);
                 if (error != undefined) {
                     console.log("verification errors:" + error);
@@ -199,13 +212,16 @@ class SeminarianControler {
                 }
                 else {
                     if (get_dto != undefined) {
-                        new domain_1.GetSeminarianUseCase(this.repository).execute(get_dto).then((seminarians) => {
+                        new domain_1.GetSeminarianUseCase(this.repository)
+                            .execute(get_dto)
+                            .then((seminarians) => {
                             const line = res.writeHead(200, {
                                 "Content-Type": "application/pdf",
-                                "Content-Disposition": "inline; filename=constance.pdf"
+                                "Content-Disposition": "inline; filename=constance.pdf",
                             });
                             (0, seminarianlist_1.CreateSeminarianList)((data) => line.write(data), () => line.end(), seminarians);
-                        }).catch((error) => {
+                        })
+                            .catch((error) => {
                             res.status(418).send("unable to get seminarians: " + error);
                         });
                     }

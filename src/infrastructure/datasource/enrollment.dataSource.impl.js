@@ -18,6 +18,16 @@ const calculateScore_1 = require("./utils/calculateScore");
 const calculateIfSeminarianApproveStage_1 = require("./utils/calculateIfSeminarianApproveStage");
 const formatDate_1 = require("../../presentation/utils/formatDate");
 class EnrollmentDataSourceImpl {
+    ContarEnrolls() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield postgres_1.prisma.enrollment.count({
+                where: {
+                    status: domain_1.EnrollmentStatus.CURSANDO,
+                },
+            });
+            return result;
+        });
+    }
     getAcademicTermByEnrollment(dto) {
         return __awaiter(this, void 0, void 0, function* () {
             console.log(dto.seminarian_id);
@@ -203,13 +213,17 @@ class EnrollmentDataSourceImpl {
                     OR: [
                         {
                             seminarian_id: getDto.seminarian_id,
-                            NOT: { OR: [{ status: "REPROBADO" }, { status: "RETIRADO" }] },
+                            academic_term: { status: { not: "ACTIVO" } },
+                            NOT: {
+                                OR: [{ status: "REPROBADO" }, { status: "RETIRADO" }],
+                            },
                         },
                         {
-                            AND: [
-                                { academic_term: { status: "ACTIVO" } },
-                                { status: "RETIRADO" },
-                            ],
+                            seminarian_id: getDto.seminarian_id,
+                            academic_term: { status: "ACTIVO" },
+                            NOT: {
+                                OR: [{ status: "REPROBADO" }],
+                            },
                         },
                     ],
                 },

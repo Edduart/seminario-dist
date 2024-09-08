@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.InstructorController = void 0;
 const domain_1 = require("../../domain");
 const ficha_instructor_1 = require("../docs/ficha.instructor");
+const permissionValidator_1 = require("../services/permissionValidator");
 class InstructorController {
     constructor(instructorRepository) {
         this.instructorRepository = instructorRepository;
@@ -18,6 +19,12 @@ class InstructorController {
             });
         };
         this.createInstructor = (req, res) => {
+            try {
+                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "INSTRUCTOR", "C");
+            }
+            catch (error) {
+                return res.status(401).json("Not allowed" + error);
+            }
             const [error, createInstructorDto] = domain_1.CreateInstructorDto.create(req.body);
             if (error)
                 return res.status(400).json({ error });
@@ -30,6 +37,12 @@ class InstructorController {
             });
         };
         this.getInstructors = (req, res) => {
+            try {
+                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "INSTRUCTOR", "R");
+            }
+            catch (error) {
+                return res.status(401).json("Not allowed" + error);
+            }
             new domain_1.GetInstructors(this.instructorRepository)
                 .execute()
                 .then((instructors) => res.json(instructors))
@@ -39,6 +52,12 @@ class InstructorController {
             });
         };
         this.getInstructorById = (req, res) => {
+            try {
+                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "INSTRUCTOR", "R");
+            }
+            catch (error) {
+                return res.status(401).json("Not allowed" + error);
+            }
             const id = req.params.id;
             new domain_1.GetInstructor(this.instructorRepository)
                 .execute(id)
@@ -54,6 +73,12 @@ class InstructorController {
                 .catch((error) => res.status(400).json({ error }));
         };
         this.updateInstructorById = (req, res) => {
+            try {
+                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "INSTRUCTOR", "U");
+            }
+            catch (error) {
+                return res.status(401).json("Not allowed" + error);
+            }
             const professor_id = req.params.id;
             const [error, updateInstructorDto] = domain_1.UpdateInstructorDto.update(Object.assign(Object.assign({}, req.body), { professor_id }));
             if (error)
@@ -72,6 +97,12 @@ class InstructorController {
             });
         };
         this.deleteInstructor = (req, res) => {
+            try {
+                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "INSTRUCTOR", "D");
+            }
+            catch (error) {
+                return res.status(401).json("Not allowed" + error);
+            }
             const id = req.params.id;
             new domain_1.DeleteInstructor(this.instructorRepository)
                 .execute(id)

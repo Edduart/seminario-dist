@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.parseProfessorGet = exports.parseUserDataUpdate = exports.parseInstructorData = exports.parseUserData = exports.parsePersonData = void 0;
 const envs_1 = require("../../config/envs");
 const domain_1 = require("../../domain");
-const hash_handler_1 = require("../services/hash_handler");
+const hashHandler_1 = require("../services/hashHandler");
 const formatDate_1 = require("../../presentation/utils/formatDate");
 const serverAddress = envs_1.envs.SERVER_ADDRESS;
 function parsePersonData(req, path) {
@@ -30,7 +30,7 @@ function parsePersonData(req, path) {
         }
         catch (error) {
             console.error("Error parsing person data:", error);
-            throw new Error("An error occurred while processing person data.");
+            throw { msj: "An error occurred while processing person data", error };
         }
     });
 }
@@ -39,7 +39,7 @@ function parseUserData(req, person) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const origin = yield JSON.parse(req);
-            const hashedPassword = yield (0, hash_handler_1.encode)(origin.persona.id);
+            const hashedPassword = yield (0, hashHandler_1.encode)(origin.persona.id);
             const degrees = origin.user.degree != null
                 ? origin.user.degree.map((degree_Actual) => new domain_1.CreateDegree(origin.persona.id, degree_Actual.description.toUpperCase(), degree_Actual.link))
                 : undefined;
@@ -47,7 +47,8 @@ function parseUserData(req, person) {
             return userData;
         }
         catch (error) {
-            throw error;
+            console.error("Error parsing user data:", error);
+            throw { msj: "An error occurred while processing user data", error };
         }
     });
 }

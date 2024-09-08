@@ -59,6 +59,7 @@ function UpdatePersonFunc(data) {
                     data: cell_json,
                 });
             }
+            console.log(data.profile_picture_path);
             yield postgres_1.prisma.person.update({
                 where: {
                     id: data.id,
@@ -152,6 +153,20 @@ function CreateUser(user) {
             return;
         try {
             yield postgres_1.prisma.$transaction((tx) => __awaiter(this, void 0, void 0, function* () {
+                console.log("promise run");
+                const [parish, role] = yield Promise.all([
+                    yield postgres_1.prisma.parish.findUnique({
+                        where: { id: user.parish_id },
+                    }),
+                    yield postgres_1.prisma.role.findUnique({
+                        where: { id: user.role },
+                    }),
+                ]);
+                console.log("promise run end");
+                if (!parish)
+                    throw `parish Id does'nt exist`;
+                if (!role)
+                    throw `role Id does'nt exist`;
                 yield CreatePersonFunc(user.person);
                 const result_op = yield postgres_1.prisma.user.create({
                     data: {
@@ -178,7 +193,7 @@ function CreateUser(user) {
             }));
         }
         catch (error) {
-            throw new Error("Error creating user" + error);
+            throw { msj: "error creating user", error };
         }
     });
 }
@@ -227,7 +242,7 @@ function UpdateUserFunc(user) {
             });
         }
         catch (error) {
-            throw new Error("Error updating user" + error);
+            throw { msj: "error updating user", error };
         }
     });
 }

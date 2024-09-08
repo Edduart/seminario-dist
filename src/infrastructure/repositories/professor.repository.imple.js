@@ -5,6 +5,9 @@ class ProfessorRepositoryImpl {
     constructor(dataSource) {
         this.dataSource = dataSource;
     }
+    Ficha(id) {
+        return this.dataSource.Ficha(id);
+    }
     update(data) {
         return this.dataSource.update(data);
     }

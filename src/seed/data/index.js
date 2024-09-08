@@ -28,3 +28,4 @@ __exportStar(require("./user"), exports);
 __exportStar(require("./person"), exports);
 __exportStar(require("./subject"), exports);
 __exportStar(require("./subject-no-precedent"), exports);
+__exportStar(require("./horarios"), exports);

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CourseController = void 0;
 const domain_1 = require("../../domain");
+const permissionValidator_1 = require("../services/permissionValidator");
 class CourseController {
     constructor(courseRepository) {
         this.courseRepository = courseRepository;
@@ -29,6 +30,12 @@ class CourseController {
                 .catch((error) => res.status(400).json({ error }));
         };
         this.updateCourseById = (req, res) => {
+            try {
+                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "COURSE", "U");
+            }
+            catch (error) {
+                return res.status(401).json("Not allowed" + error);
+            }
             const id = +req.params.id;
             const [error, updateCourseDto] = domain_1.UpdateCourseDto.update(Object.assign(Object.assign({}, req.body), { id }));
             if (error)
@@ -42,6 +49,12 @@ class CourseController {
                 .catch((error) => res.status(400).json({ error }));
         };
         this.createCourse = (req, res) => {
+            try {
+                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "COURSE", "C");
+            }
+            catch (error) {
+                return res.status(401).json("Not allowed" + error);
+            }
             const [error, createCourseDto] = domain_1.CreateCourseDto.create(req.body);
             if (error)
                 return res.status(400).json({ error });
@@ -51,6 +64,12 @@ class CourseController {
                 .catch((error) => res.status(400).json({ error }));
         };
         this.deleteCourse = (req, res) => {
+            try {
+                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "COURSE", "D");
+            }
+            catch (error) {
+                return res.status(401).json("Not allowed" + error);
+            }
             const id = +req.params.id;
             new domain_1.DeleteCourse(this.courseRepository)
                 .execute(id)

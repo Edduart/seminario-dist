@@ -17,3 +17,4 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./createProfessor.dto"), exports);
 __exportStar(require("./updateProfessor.dto"), exports);
 __exportStar(require("./getProfessor.dto"), exports);
+__exportStar(require("./profesorfichadto"), exports);

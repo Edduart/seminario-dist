@@ -5,6 +5,12 @@ const domain_1 = require("../../domain");
 class EnrollmentController {
     constructor(repository) {
         this.repository = repository;
+        this.Getcounts = (req, res) => {
+            new domain_1.ContarEnrollsUseCase(this.repository)
+                .execute()
+                .then((enrollment) => res.json({ enrollment }))
+                .catch((error) => res.status(400).json({ error }));
+        };
         this.getAcademicTermByEnrollment = (req, res) => {
             const [error, getDto] = domain_1.GetAcademicTermByEnrollmentDto.get(req.query);
             if (error)

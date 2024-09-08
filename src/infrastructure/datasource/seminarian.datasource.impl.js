@@ -273,6 +273,7 @@ class SeminarianDataSourceImpl {
                 const media = person_actual.social_media.map((social_Actual) => {
                     return domain_1.SocialMediaEntity.fromdb({
                         social_media_category: social_Actual.social_media_category,
+                        category: social_Actual.social_media_category,
                         link: social_Actual.link,
                     });
                 });

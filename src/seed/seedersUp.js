@@ -20,6 +20,13 @@ function main() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             yield postgres_1.prisma.$transaction((tx) => __awaiter(this, void 0, void 0, function* () {
+                data_1.Horarios.forEach((Element) => __awaiter(this, void 0, void 0, function* () {
+                    yield postgres_1.prisma.horarios.upsert({
+                        where: { ID: Element.ID },
+                        update: {},
+                        create: Element,
+                    });
+                }));
                 console.log("Seeding: permissions");
                 data_1.permissions.forEach((element) => __awaiter(this, void 0, void 0, function* () {
                     yield postgres_1.prisma.permission.upsert({

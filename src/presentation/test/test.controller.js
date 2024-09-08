@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TestController = void 0;
 const domain_1 = require("../../domain");
+const permissionValidator_1 = require("../services/permissionValidator");
 const Notas_Certificadas_1 = require("../docs/Notas.Certificadas");
 const seminarialistnote_1 = require("../docs/seminarialistnote");
 class TestController {
@@ -18,6 +19,12 @@ class TestController {
                 .catch((error) => res.status(400).json({ error }));
         };
         this.delete = (req, res) => {
+            try {
+                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "TEST", "D");
+            }
+            catch (error) {
+                return res.status(401).json("Not allowed" + error);
+            }
             const id = +req.params.id;
             new domain_1.DeleteTest(this.repository)
                 .execute(id)
@@ -28,6 +35,12 @@ class TestController {
                 .catch((error) => res.status(400).json({ error }));
         };
         this.update = (req, res) => {
+            try {
+                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "TEST", "U");
+            }
+            catch (error) {
+                return res.status(401).json("Not allowed" + error);
+            }
             const id = +req.params.id;
             const [error, updateDto] = domain_1.UpdateTestDto.update(Object.assign(Object.assign({}, req.body), { id }));
             if (error)
@@ -108,6 +121,12 @@ class TestController {
                 .catch((error) => res.status(400).json({ error }));
         };
         this.create = (req, res) => {
+            try {
+                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "TEST", "C");
+            }
+            catch (error) {
+                return res.status(401).json("Not allowed" + error);
+            }
             const [error, createDto] = domain_1.CreateTestDto.create(req.body);
             console.log("inside create controller", { createDto });
             if (error)

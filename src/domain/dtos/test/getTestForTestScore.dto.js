@@ -9,10 +9,20 @@ class GetTestForTestScoreDto {
     static get(props) {
         let { subject_id, academic_term_id } = props;
         let dataErrors = [];
-        if (subject_id != undefined)
+        if (!subject_id || isNaN(Number(subject_id)) || +subject_id < 0) {
+            dataErrors.push("subject_id is must be a valid number");
+        }
+        else {
             subject_id = +subject_id;
-        if (academic_term_id != undefined)
+        }
+        if (!academic_term_id ||
+            isNaN(Number(academic_term_id)) ||
+            +academic_term_id < 0) {
+            dataErrors.push("subject_id is must be a valid number");
+        }
+        else {
             academic_term_id = +academic_term_id;
+        }
         if (dataErrors.length > 0)
             return [dataErrors];
         return [

@@ -24,10 +24,10 @@ function encode(PassToEncode) {
     });
 }
 exports.encode = encode;
-function compare(PassToCompare, hashTocompare) {
+function compare(PassToCompare, hashToCompare) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const result = (0, bcrypt_1.compareSync)(PassToCompare, hashTocompare);
+            const result = (0, bcrypt_1.compareSync)(PassToCompare, hashToCompare);
             return result;
         }
         catch (error) {

@@ -2,11 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UpdateInstructorDto = void 0;
 class UpdateInstructorDto {
-    constructor(professor_id, starting_date, instructor_position, status) {
+    constructor(professor_id, starting_date, instructor_position, status, instructor_role) {
         this.professor_id = professor_id;
         this.starting_date = starting_date;
         this.instructor_position = instructor_position;
         this.status = status;
+        this.instructor_role = instructor_role;
     }
     get values() {
         const returnObj = {};
@@ -39,9 +40,27 @@ class UpdateInstructorDto {
         }
         if (!instructor_position)
             return ["instructor position is required"];
+        let instructor_role = 0;
+        if (instructor_position === "INSTRUCTOR" ||
+            instructor_position === "DIRECTOR_ESPIRITUAL" ||
+            instructor_position === "ECONOMO") {
+            instructor_role = 6;
+        }
+        else if (instructor_position === "ASESOR_PROPEDEUTICO") {
+            instructor_role = 7;
+        }
+        else if (instructor_position === "VICERECTOR") {
+            instructor_role = 3;
+        }
+        else if (instructor_position === "RECTOR") {
+            instructor_role = 2;
+        }
+        else {
+            return [`error instructor role no valid, ${instructor_position}`];
+        }
         return [
             undefined,
-            new UpdateInstructorDto(professor_id, starting_date, instructor_position, status),
+            new UpdateInstructorDto(professor_id, starting_date, instructor_position, status, instructor_role),
         ];
     }
 }

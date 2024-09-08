@@ -11,11 +11,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AcademicTermController = void 0;
 const domain_1 = require("../../domain");
+const permissionValidator_1 = require("../services/permissionValidator");
 class AcademicTermController {
     constructor(repository, enrollmentRepository) {
         this.repository = repository;
         this.enrollmentRepository = enrollmentRepository;
         this.Create = (req, res) => {
+            try {
+                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "STAGE", "C");
+            }
+            catch (error) {
+                return res.status(401).json("Not allowed" + error);
+            }
             const [error_Arr, academicCreateDTO] = domain_1.CreateAcademicTerm.create(req.body);
             if (academicCreateDTO != undefined) {
                 new domain_1.CreateAcademicTermUseCase(this.repository)
@@ -58,6 +65,12 @@ class AcademicTermController {
             });
         };
         this.Update = (req, res) => {
+            try {
+                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "STAGE", "U");
+            }
+            catch (error) {
+                return res.status(401).json("Not allowed" + error);
+            }
             new domain_1.updateAcademicTermUseCase(this.repository)
                 .execute(req.body.id)
                 .then((academic) => {
@@ -68,6 +81,12 @@ class AcademicTermController {
             });
         };
         this.Activate = (req, res) => {
+            try {
+                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "STAGE", "D");
+            }
+            catch (error) {
+                return res.status(401).json("Not allowed" + error);
+            }
             const id = +req.params.id;
             if (id == undefined) {
                 return res.status(400).json("el id es requerido");
@@ -82,6 +101,12 @@ class AcademicTermController {
             });
         };
         this.Deactivate = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "STAGE", "D");
+            }
+            catch (error) {
+                return res.status(401).json("Not allowed" + error);
+            }
             const id = +req.params.id;
             console.log(id);
             if (id == undefined) {

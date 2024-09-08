@@ -64,6 +64,14 @@ class InstructorDataSourceImple {
     }
     create(createDto) {
         return __awaiter(this, void 0, void 0, function* () {
+            const checkInstructorPosition = yield postgres_1.prisma.instructor.findMany({
+                where: {
+                    instructor_position: createDto.instructor_position,
+                },
+            });
+            console.log({ checkInstructorPosition });
+            if (checkInstructorPosition.length > 0)
+                throw `there is already one instructor in the position: ${createDto.instructor_position}`;
             const createInstructor = yield postgres_1.prisma.instructor.create({
                 data: {
                     professor_id: createDto.professor_id,
@@ -85,6 +93,14 @@ class InstructorDataSourceImple {
         return __awaiter(this, void 0, void 0, function* () {
             console.log(updateDto);
             yield this.findById(updateDto.professor_id);
+            const checkInstructorPosition = yield postgres_1.prisma.instructor.findMany({
+                where: {
+                    instructor_position: updateDto.instructor_position,
+                },
+            });
+            console.log({ checkInstructorPosition });
+            if (checkInstructorPosition.length > 0)
+                throw `there is already one instructor in the position: ${updateDto.instructor_position}`;
             const updateInstructor = yield postgres_1.prisma.instructor.update({
                 where: { professor_id: updateDto.professor_id },
                 data: {
@@ -114,16 +130,31 @@ class InstructorDataSourceImple {
     }
     deleteById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const deleteInstructor = yield postgres_1.prisma.instructor.update({
-                where: { professor_id: id },
-                data: { status: 0, instructor_position: "DESACTIVADO" },
-            });
-            yield postgres_1.prisma.user.update({
-                where: { person_id: id },
-                data: {
-                    Role_id: 4,
-                },
-            });
+            yield this.findById(id);
+            const deleteInstructor = yield postgres_1.prisma.$transaction((tx) => __awaiter(this, void 0, void 0, function* () {
+                const instructor = yield tx.instructor.update({
+                    where: { professor_id: id },
+                    data: { status: 0, instructor_position: "DESACTIVADO" },
+                });
+                yield tx.user.update({
+                    where: { person_id: id },
+                    data: {
+                        Role_id: 4,
+                    },
+                });
+                const coursesWithInstructorId = yield tx.course.findMany({
+                    where: { instructor_id: id },
+                });
+                const coursesId = coursesWithInstructorId.map((id) => id.id);
+                if (coursesId.length > 0) {
+                    yield tx.course.updateMany({
+                        where: { id: { in: coursesId } },
+                        data: { instructor_id: null },
+                    });
+                }
+                return instructor;
+            }));
+            console.log({ deleteInstructor });
             return domain_1.InstructorEntity.fromObject(deleteInstructor);
         });
     }

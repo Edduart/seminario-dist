@@ -23,6 +23,7 @@ __exportStar(require("./seminarian"), exports);
 __exportStar(require("./subject"), exports);
 __exportStar(require("./person"), exports);
 __exportStar(require("./user"), exports);
+__exportStar(require("./horarios"), exports);
 __exportStar(require("./phone/phone.create"), exports);
 __exportStar(require("./professor/createProfessor.dto"), exports);
 __exportStar(require("./degree/create.degree"), exports);

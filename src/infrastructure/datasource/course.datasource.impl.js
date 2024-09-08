@@ -46,9 +46,23 @@ class CourseDataSourceImpl {
     }
     updateById(updateDto) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log("🚀 ~ CourseDataSourceImpl ~ updateById ~ updateDto:", updateDto);
+            if (updateDto.instructor_id) {
+                const checkInstructor = yield postgres_1.prisma.instructor.findUnique({
+                    where: {
+                        professor_id: updateDto.instructor_id,
+                        NOT: { OR: [{ instructor_position: "DESACTIVADO" }, { status: 0 }] },
+                    },
+                });
+                if (!checkInstructor)
+                    throw `instructor ID ${updateDto.instructor_id} does'nt exist or is disabled`;
+            }
+            yield this.findById(updateDto.id);
             const updateCourse = yield postgres_1.prisma.course.update({
                 where: { id: updateDto.id },
-                data: updateDto.values,
+                data: {
+                    instructor_id: updateDto.instructor_id,
+                },
             });
             return domain_1.CourseEntity.fromObject(updateCourse);
         });

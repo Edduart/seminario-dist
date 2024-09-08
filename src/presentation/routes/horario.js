@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const infrastructure_1 = require("../../infrastructure");
+const horario_controller_1 = require("../horario/horario.controller");
+const router = (0, express_1.Router)();
+const datasource = new infrastructure_1.HorarioDataSourceImplementation();
+const Repository = new infrastructure_1.HorarioRepositoryImpl(datasource);
+const control = new horario_controller_1.HorarioController(Repository);
+router.get('/', control.Get);
+router.put('/', control.Update);
+module.exports = router;

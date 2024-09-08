@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TestScoreController = void 0;
 const domain_1 = require("../../domain");
+const permissionValidator_1 = require("../services/permissionValidator");
 class TestScoreController {
     constructor(repository) {
         this.repository = repository;
@@ -16,6 +17,12 @@ class TestScoreController {
                 .catch((error) => res.status(400).json({ error }));
         };
         this.create = (req, res) => {
+            try {
+                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "TEST", "C");
+            }
+            catch (error) {
+                return res.status(401).json("Not allowed" + error);
+            }
             const [error, createDto] = domain_1.CreateTestScoreDto.create(req.body);
             if (error)
                 return res.status(400).json({ msj: "Data validation errors", error });
@@ -27,6 +34,12 @@ class TestScoreController {
                 .catch((error) => res.status(400).json({ error }));
         };
         this.update = (req, res) => {
+            try {
+                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "TEST", "U");
+            }
+            catch (error) {
+                return res.status(401).json("Not allowed" + error);
+            }
             const [error, updateDto] = domain_1.UpdateTestScoreDto.update(req.body);
             if (error)
                 return res.status(400).json({ error });

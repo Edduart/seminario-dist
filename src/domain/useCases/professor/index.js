@@ -18,3 +18,4 @@ __exportStar(require("./createProfessor"), exports);
 __exportStar(require("./getProfessors"), exports);
 __exportStar(require("./deleteProfessor"), exports);
 __exportStar(require("./updateProfessor"), exports);
+__exportStar(require("./ficha"), exports);

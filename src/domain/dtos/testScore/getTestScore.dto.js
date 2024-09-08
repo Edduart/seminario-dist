@@ -8,13 +8,25 @@ class GetTestScoreDto {
     }
     static get(props) {
         let { test_id, enrollment_id } = props;
-        let dataErrors = [];
-        if (test_id != undefined)
+        let validationErrors = [];
+        if (test_id != undefined) {
             test_id = +test_id;
-        if (enrollment_id != undefined)
+            if (isNaN(Number(test_id)) || test_id < 0)
+                validationErrors.push({
+                    field: "test_id",
+                    message: "test_id must be a valid ID",
+                });
+        }
+        if (enrollment_id != undefined) {
             enrollment_id = +enrollment_id;
-        if (dataErrors.length > 0)
-            return [dataErrors];
+            if (isNaN(Number(enrollment_id)) || enrollment_id < 0)
+                validationErrors.push({
+                    field: "enrollment_id",
+                    message: "enrollment_id must be a valid ID",
+                });
+        }
+        if (validationErrors.length > 0)
+            return [validationErrors];
         return [undefined, new GetTestScoreDto(test_id, enrollment_id)];
     }
 }

@@ -9,7 +9,7 @@ class CreateSocialMedia {
     Validate() {
         let errorarray = [];
         if (!this.social_media_category)
-            errorarray.push("Category is required");
+            errorarray.push("Social media Category ID is required");
         if (!this.link)
             errorarray.push("social link is required");
         if (typeof this.link !== 'string')

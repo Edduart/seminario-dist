@@ -16,7 +16,7 @@ exports.UserControler = void 0;
 const domain_1 = require("../../domain");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 require("dotenv/config");
-const hash_handler_1 = require("../services/hash_handler");
+const hashHandler_1 = require("../services/hashHandler");
 const infrastructure_1 = require("../../infrastructure");
 const permissionValidator_1 = require("../services/permissionValidator");
 const bitacora_datasource_imple_1 = require("../../infrastructure/datasource/bitacora.datasource.imple");
@@ -66,7 +66,7 @@ class UserControler {
                     res.status(403).json("Datos de acceso invalidos").send;
                 }
                 else {
-                    const result = yield (0, hash_handler_1.compare)(acces_promts.password, user.password);
+                    const result = yield (0, hashHandler_1.compare)(acces_promts.password, user.password);
                     if (!result) {
                         res.status(403).json("Contraseña invalida").send;
                     }
@@ -108,7 +108,7 @@ class UserControler {
             }
         });
         this.ChangePass = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const new_pass = (0, hash_handler_1.encode)(req.body.password);
+            const new_pass = (0, hashHandler_1.encode)(req.body.password);
             const acces_promts = new domain_1.Login(req.body.id, yield new_pass);
             new domain_1.Change_use(this.repository)
                 .execute(acces_promts)

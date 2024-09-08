@@ -18,7 +18,7 @@ class SubjectControler {
         this.repository = repository;
         this.Delete = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "subject", 'D');
+                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "SUBJECT", 'D');
                 const number_aux = Number(req.params.id);
                 if (Number.isNaN(number_aux)) {
                     console.log("verification errors: id must be a number");
@@ -46,7 +46,7 @@ class SubjectControler {
         });
         this.Get = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "subject", 'R');
+                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "SUBJECT", 'R');
                 const [error, get_dto] = domain_1.GetSubjectDTO.CreateDTO(req.query);
                 if (error != undefined) {
                     console.log("verification errors:" + error);
@@ -67,7 +67,7 @@ class SubjectControler {
         });
         this.Update = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "subject", 'U');
+                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "SUBJECT", 'U');
                 const [error, get_dto] = domain_1.UpdateSubjectDTO.CreateDTO(req.body);
                 if (error != undefined) {
                     console.log("verification errors:" + error);
@@ -89,7 +89,7 @@ class SubjectControler {
         });
         this.Create = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "subject", 'C');
+                const result = (0, permissionValidator_1.ValidatePermission)(req.body.Permisos, "SUBJECT", 'C');
                 const [errores, createsubdto] = domain_1.CreateSubjectDTO.CreateDTO(req.body);
                 if (errores != undefined) {
                     console.log("verification errors:" + errores);

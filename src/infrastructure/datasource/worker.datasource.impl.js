@@ -17,7 +17,7 @@ class WorkerDataSourceImpl {
     GetSocial() {
         return __awaiter(this, void 0, void 0, function* () {
             const socials = yield postgres_1.prisma.social_media_category.findMany({});
-            const social_cate = socials.map(sociales => {
+            const social_cate = socials.map((sociales) => {
                 return domain_1.SocialMediaCategoryEntity.fromdb({
                     id: sociales.id,
                     description: sociales.description,
@@ -31,9 +31,10 @@ class WorkerDataSourceImpl {
         return __awaiter(this, void 0, void 0, function* () {
             const reslut_trans = yield postgres_1.prisma.$transaction((tx) => __awaiter(this, void 0, void 0, function* () {
                 const exists = yield postgres_1.prisma.person.findFirst({
-                    where: { id: data.persona.id }
+                    where: { id: data.persona.id },
                 });
-                if (exists) { }
+                if (exists) {
+                }
                 else {
                     throw `worker not found`;
                 }
@@ -41,9 +42,10 @@ class WorkerDataSourceImpl {
                 const perona_actualizar = postgres_1.prisma.basic_worker.update({
                     where: {
                         person_id: data.persona.id,
-                    }, data: {
-                        job_position: data.job_position
-                    }
+                    },
+                    data: {
+                        job_position: data.job_position,
+                    },
                 });
                 return yield this.get(data.persona.id, undefined);
             }));
@@ -55,38 +57,40 @@ class WorkerDataSourceImpl {
             yield postgres_1.prisma.$transaction((tx) => __awaiter(this, void 0, void 0, function* () {
                 yield postgres_1.prisma.phone_number.deleteMany({
                     where: {
-                        person_id: id
-                    }
+                        person_id: id,
+                    },
                 });
                 yield postgres_1.prisma.social_media.deleteMany({
                     where: {
-                        person_id: id
-                    }
+                        person_id: id,
+                    },
                 });
                 yield postgres_1.prisma.basic_worker.delete({
                     where: {
-                        person_id: id
-                    }
+                        person_id: id,
+                    },
                 });
                 yield postgres_1.prisma.person.delete({
                     where: {
-                        id: id
-                    }
+                        id: id,
+                    },
                 });
             }));
-            return ("worker deleted");
+            return "worker deleted";
         });
     }
     create(spers) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield postgres_1.prisma.person.findFirst({ where: { id: spers.persona.id, } });
+            const user = yield postgres_1.prisma.person.findFirst({
+                where: { id: spers.persona.id },
+            });
             if (user != undefined) {
                 throw new Error("Someone with the same id already exits");
             }
             try {
                 const result_individual = yield postgres_1.prisma.$transaction((tx) => __awaiter(this, void 0, void 0, function* () {
                     const exists = yield postgres_1.prisma.person.findFirst({
-                        where: { id: spers.persona.id }
+                        where: { id: spers.persona.id },
                     });
                     if (exists != null) {
                         console.log(exists);
@@ -96,14 +100,18 @@ class WorkerDataSourceImpl {
                     yield postgres_1.prisma.basic_worker.create({
                         data: {
                             person_id: spers.persona.id,
-                            job_position: spers.job_position.toUpperCase()
-                        }
+                            job_position: spers.job_position.toUpperCase(),
+                        },
                     });
                 }));
             }
             catch (error) {
-                yield postgres_1.prisma.phone_number.deleteMany({ where: { person_id: spers.persona.id } });
-                yield postgres_1.prisma.social_media.deleteMany({ where: { person_id: spers.persona.id } });
+                yield postgres_1.prisma.phone_number.deleteMany({
+                    where: { person_id: spers.persona.id },
+                });
+                yield postgres_1.prisma.social_media.deleteMany({
+                    where: { person_id: spers.persona.id },
+                });
                 yield postgres_1.prisma.person.delete({ where: { id: spers.persona.id } });
                 throw error;
             }
@@ -119,25 +127,27 @@ class WorkerDataSourceImpl {
                         { id: id_re },
                         {
                             basic_worker: {
-                                job_position: puesto
-                            }
+                                job_position: puesto,
+                            },
                         },
-                        { basic_worker: {
+                        {
+                            basic_worker: {
                                 isNot: null,
-                            } }
-                    ]
+                            },
+                        },
+                    ],
                 },
                 include: {
                     phone_number: true,
                     social_media: {
                         include: {
                             social_media_category_social_media_social_media_categoryTosocial_media_category: true,
-                        }
+                        },
                     },
                     basic_worker: true,
-                }
+                },
             });
-            const workers = retunrFromDB.map(Worker => {
+            const workers = retunrFromDB.map((Worker) => {
                 var _a;
                 const person = domain_1.PersonEntity.fromdb({
                     id: Worker.id,
@@ -147,18 +157,18 @@ class WorkerDataSourceImpl {
                     email: Worker.email,
                     birthdate: Worker.birthdate,
                     medical_record: Worker.medical_record,
-                    BloodType: Worker.BloodType
+                    BloodType: Worker.BloodType,
                 });
-                const phones = Worker.phone_number.map(phoneatributer => {
+                const phones = Worker.phone_number.map((phoneatributer) => {
                     return domain_1.PhoneEntity.fromdb({
                         phone_number: phoneatributer.phone_number,
-                        description: phoneatributer.description
+                        description: phoneatributer.description,
                     });
                 });
-                const socials = Worker.social_media.map(sociales => {
+                const socials = Worker.social_media.map((sociales) => {
                     return domain_1.SocialMediaEntity.fromdb({
-                        social_Cate: sociales.social_media_category_social_media_social_media_categoryTosocial_media_category.description,
-                        link: sociales.link
+                        category: sociales.social_media_category,
+                        link: sociales.link,
                     });
                 });
                 person.cellpones = phones;

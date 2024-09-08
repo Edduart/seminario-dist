@@ -25,3 +25,4 @@ __exportStar(require("./updateStageIfApproved"), exports);
 __exportStar(require("./createByEnrollmentEquivalence"), exports);
 __exportStar(require("./getSubjectAllowToEnrollEquivalency"), exports);
 __exportStar(require("./getAcademicTermByEnrollment"), exports);
+__exportStar(require("./count"), exports);

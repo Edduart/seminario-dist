@@ -49,8 +49,8 @@ function setDefaultProfileImage(destinationFilePath) {
         const defaultProfileImage = "./images/assests/profile_icon.jpeg";
         console.log("running copy");
         try {
-            const readDefaultImage = fs_1.default.readFileSync(defaultProfileImage);
-            fs_1.default.writeFileSync(destinationFilePath + ".jpeg", readDefaultImage);
+            const readDefaultImage = yield fs_1.default.readFileSync(defaultProfileImage);
+            yield fs_1.default.writeFileSync(destinationFilePath + ".jpeg", readDefaultImage);
         }
         catch (error) {
             return error;
