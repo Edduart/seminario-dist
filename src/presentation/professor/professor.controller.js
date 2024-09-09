@@ -25,13 +25,16 @@ class ProfessorController {
         this.instructorPositionRepo = instructorPositionRepo;
         this.ficha = (req, res) => {
             try {
-                new domain_1.FichaUsePRofe(this.repository).execute(req.params.id).then((profesor) => {
+                new domain_1.FichaUsePRofe(this.repository)
+                    .execute(req.params.id)
+                    .then((profesor) => {
                     const line = res.writeHead(200, {
                         "Content-Type": "application/pdf",
-                        "Content-Disposition": "inline; filename=ficha.pdf"
+                        "Content-Disposition": "inline; filename=ficha.pdf",
                     });
                     (0, fichaProfessor_1.BuildFichaProfessor)((data) => line.write(data), () => line.end(), profesor);
-                }).catch((error) => {
+                })
+                    .catch((error) => {
                     res.status(418).send("unable to create ID: " + error);
                 });
             }
@@ -52,12 +55,7 @@ class ProfessorController {
                 const isInstructor = yield (0, parseData_1.parseInstructorData)(req.body.data);
                 const personData = yield (0, parseData_1.parsePersonData)(req.body.data, req.body.ayuda);
                 const { userData } = yield (0, parseData_1.parseUserDataUpdate)(req.body.data);
-                const professorData = new domain_1.UpdateProfessorDto(personData, userData);
-                const dataValidation = yield professorData.DataValidation();
-                if (dataValidation) {
-                    return res.status(400).send("Error: " + dataValidation);
-                }
-                let newRole = userData.role_id;
+                let professorData = null;
                 let dtoUpdateInstructor = null;
                 if (isInstructor) {
                     const [error, updateInstructor] = domain_1.UpdateInstructorDto.update(isInstructor);
@@ -65,16 +63,25 @@ class ProfessorController {
                         return res.status(400).json({ error });
                     }
                     else {
-                        newRole = updateInstructor.instructor_role;
+                        console.log("es instructor");
+                        professorData = new domain_1.UpdateProfessorDto(personData, userData, updateInstructor === null || updateInstructor === void 0 ? void 0 : updateInstructor.instructor_position);
+                        professorData.user.role_id = updateInstructor.instructor_role;
                         dtoUpdateInstructor = updateInstructor;
                     }
+                }
+                else {
+                    professorData = new domain_1.UpdateProfessorDto(personData, userData);
+                }
+                const dataValidation = yield professorData.DataValidation();
+                if (dataValidation) {
+                    return res.status(400).send("Error: " + dataValidation);
                 }
                 yield new domain_1.UpdateProfessor(this.repository)
                     .execute(professorData)
                     .then((professor) => __awaiter(this, void 0, void 0, function* () {
-                    let instructorCreateStatus = {};
+                    let instructorUpdateStatus = {};
                     if (isInstructor) {
-                        instructorCreateStatus = yield new domain_1.UpdateInstructor(this.instructorPositionRepo)
+                        instructorUpdateStatus = yield new domain_1.UpdateInstructor(this.instructorPositionRepo)
                             .execute(dtoUpdateInstructor)
                             .then(() => {
                             return {
@@ -92,6 +99,7 @@ class ProfessorController {
                     res.set({ "Access-Control-Expose-Headers": "auth" }).json({
                         msj: "Profesor actualizado correctamente",
                         professor,
+                        instructorUpdateStatus,
                     });
                 }))
                     .catch((error) => res.status(400).json({ error }));
@@ -122,10 +130,10 @@ class ProfessorController {
             }
             try {
                 let dtoCreateInstructor = null;
+                let professorData = null;
                 const isInstructor = yield (0, parseData_1.parseInstructorData)(req.body.data);
                 const personData = yield (0, parseData_1.parsePersonData)(req.body.data, req.body.ayuda);
                 const userData = yield (0, parseData_1.parseUserData)(req.body.data, personData);
-                const professorData = new domain_1.CreateProfessor(userData);
                 userData.role = 4;
                 if (isInstructor) {
                     const [error, createInstructor] = domain_1.CreateInstructorDto.create(isInstructor);
@@ -135,9 +143,13 @@ class ProfessorController {
                         return res.status(400).json({ error });
                     }
                     else {
+                        professorData = new domain_1.CreateProfessor(userData, createInstructor === null || createInstructor === void 0 ? void 0 : createInstructor.instructor_position);
                         userData.role = createInstructor === null || createInstructor === void 0 ? void 0 : createInstructor.instructor_role;
                         dtoCreateInstructor = createInstructor;
                     }
+                }
+                else {
+                    professorData = new domain_1.CreateProfessor(userData);
                 }
                 console.log(req.body.ayuda);
                 const dataValidationErrors = professorData.Validate();

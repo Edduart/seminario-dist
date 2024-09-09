@@ -13,22 +13,33 @@ exports.ProfessorDataSourceImpl = void 0;
 const postgres_1 = require("../../data/postgres");
 const domain_1 = require("../../domain");
 const user_functions_1 = require("./utils/user.functions");
+const filterEnum_1 = require("../../presentation/utils/filterEnum");
 const parseData_1 = require("../../presentation/utils/parseData");
 class ProfessorDataSourceImpl {
     Ficha(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield postgres_1.prisma.professor.findFirst({
                 where: {
-                    id: id
-                }, include: {
+                    id: id,
+                },
+                include: {
                     user: {
                         include: {
                             academic_degree: true,
-                            person: { include: { phone_number: true, social_media: { include: { social_media_category_social_media_social_media_categoryTosocial_media_category: true } } } },
-                            parish: { include: { diocese: true } }
-                        }
-                    }
-                }
+                            person: {
+                                include: {
+                                    phone_number: true,
+                                    social_media: {
+                                        include: {
+                                            social_media_category_social_media_social_media_categoryTosocial_media_category: true,
+                                        },
+                                    },
+                                },
+                            },
+                            parish: { include: { diocese: true } },
+                        },
+                    },
+                },
             });
             if (result == null)
                 throw new Error("Instructor does not exists");
@@ -46,15 +57,35 @@ class ProfessorDataSourceImpl {
             return dto;
         });
     }
-    update(data) {
+    update(dto) {
         return __awaiter(this, void 0, void 0, function* () {
             const professorExist = yield postgres_1.prisma.professor.findUnique({
-                where: { id: data.person.id },
+                where: { id: dto.person.id },
             });
             if (professorExist == null)
                 throw "Professor doesn't exist!";
-            yield (0, user_functions_1.UpdatePersonFunc)(data.person);
-            yield (0, user_functions_1.UpdateUserFunc)(data.user);
+            const getInstructorById = yield postgres_1.prisma.instructor.findUnique({
+                where: { professor_id: dto.person.id },
+            });
+            if (!getInstructorById)
+                throw "Instructor with ID: ${id} no found";
+            const instructorPositions = yield postgres_1.prisma.instructor.findMany({
+                where: {
+                    NOT: { instructor_position: "DESACTIVADO" },
+                },
+                select: { instructor_position: true },
+            });
+            const filteredInstructorPosition = filterEnum_1.FilterEnum.filterInstructorPosition(instructorPositions);
+            console.log({ msj: "inside update", filteredInstructorPosition });
+            if (dto.instructor_position) {
+                if (!(dto.instructor_position == getInstructorById.instructor_position)) {
+                    if (!Object.keys(filteredInstructorPosition).includes(dto.instructor_position)) {
+                        throw "there is other instructor with the same position";
+                    }
+                }
+            }
+            yield (0, user_functions_1.UpdatePersonFunc)(dto.person);
+            yield (0, user_functions_1.UpdateUserFunc)(dto.user);
             return { msj: "Professor Updated!" };
         });
     }
@@ -97,6 +128,15 @@ class ProfessorDataSourceImpl {
             });
             if (exists)
                 throw "Person already exist";
+            if (createDto.instructor_position) {
+                const checkInstructorPosition = yield postgres_1.prisma.instructor.findMany({
+                    where: {
+                        instructor_position: createDto.instructor_position,
+                    },
+                });
+                if (checkInstructorPosition.length > 0)
+                    throw `there is already one instructor in the position: ${createDto.instructor_position}`;
+            }
             yield (0, user_functions_1.CreateUser)(createDto.user);
             yield postgres_1.prisma.professor.create({
                 data: {
@@ -144,7 +184,6 @@ class ProfessorDataSourceImpl {
                 throw "No se encontraron coincidencias con los parametros especificados!";
             console.log(returnFromDB);
             return (0, parseData_1.parseProfessorGet)(returnFromDB);
-            ;
         });
     }
 }

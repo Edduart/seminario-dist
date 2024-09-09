@@ -2,8 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateProfessor = void 0;
 class CreateProfessor {
-    constructor(user) {
+    constructor(user, instructor_position) {
         this.user = user;
+        this.instructor_position = instructor_position;
     }
     Validate() {
         let error = [];

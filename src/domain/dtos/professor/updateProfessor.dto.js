@@ -2,9 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UpdateProfessorDto = void 0;
 class UpdateProfessorDto {
-    constructor(person, user) {
+    constructor(person, user, instructor_position) {
         this.person = person;
         this.user = user;
+        this.instructor_position = instructor_position;
     }
     DataValidation() {
         let error = [];

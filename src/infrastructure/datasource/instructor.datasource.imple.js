@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.InstructorDataSourceImple = void 0;
 const postgres_1 = require("../../data/postgres");
 const domain_1 = require("../../domain");
+const filterEnum_1 = require("../../presentation/utils/filterEnum");
 class InstructorDataSourceImple {
     Ficha(id) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -91,16 +92,21 @@ class InstructorDataSourceImple {
     }
     updateById(updateDto) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(updateDto);
-            yield this.findById(updateDto.professor_id);
-            const checkInstructorPosition = yield postgres_1.prisma.instructor.findMany({
+            console.log({ updateDto });
+            const instructorToUpdate = yield this.findById(updateDto.professor_id);
+            const instructorPositions = yield postgres_1.prisma.instructor.findMany({
                 where: {
-                    instructor_position: updateDto.instructor_position,
+                    NOT: { instructor_position: "DESACTIVADO" },
                 },
+                select: { instructor_position: true },
             });
-            console.log({ checkInstructorPosition });
-            if (checkInstructorPosition.length > 0)
-                throw `there is already one instructor in the position: ${updateDto.instructor_position}`;
+            const filteredInstructorPosition = filterEnum_1.FilterEnum.filterInstructorPosition(instructorPositions);
+            console.log({ msj: "inside update", filteredInstructorPosition });
+            if (!(updateDto.instructor_position == instructorToUpdate.instructor_position)) {
+                if (!Object.keys(filteredInstructorPosition).includes(updateDto.instructor_position)) {
+                    throw "there is other instructor with the same position";
+                }
+            }
             const updateInstructor = yield postgres_1.prisma.instructor.update({
                 where: { professor_id: updateDto.professor_id },
                 data: {
