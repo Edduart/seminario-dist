@@ -37,7 +37,7 @@ var Locations_enum;
 var seminarianMinistery_ENUM;
 (function (seminarianMinistery_ENUM) {
     seminarianMinistery_ENUM["UNKOWN"] = "UNKOWN";
-    seminarianMinistery_ENUM["ADMISION"] = "ADMISI\u00D3N";
+    seminarianMinistery_ENUM["ADMISI_N"] = "ADMISION";
     seminarianMinistery_ENUM["LECTORADO"] = "LECTORADO";
     seminarianMinistery_ENUM["ACOLITADO"] = "ACOLITADO";
 })(seminarianMinistery_ENUM || (exports.seminarianMinistery_ENUM = seminarianMinistery_ENUM = {}));

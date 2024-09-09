@@ -142,13 +142,10 @@ class SeminarianDataSourceImpl {
     }
     getByID(id) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log(id);
             const result = yield postgres_1.prisma.seminarian.findFirst({ where: {
+                    status: client_1.seminarian_status.ACTIVO,
                     user: { person_id: id },
-                    enrollment: {
-                        some: {
-                            status: client_1.enrollment_status.CURSANDO
-                        }
-                    }
                 }, include: {
                     user: { include: { person: true } },
                     enrollment: { include: {
@@ -167,12 +164,13 @@ class SeminarianDataSourceImpl {
                     stage = "Configurativa";
                     break;
             }
-            const year = result === null || result === void 0 ? void 0 : result.enrollment[0].academic_term.end_date.getFullYear().toString();
+            const year = result === null || result === void 0 ? void 0 : result.enrollment[result.enrollment.length - 1].academic_term.end_date.getFullYear().toString();
+            console.log("Before break:" + result);
             if (result == null)
                 throw new Error("Seminarian does not exists");
             const document = domain_1.DocumenDTO.fromdb({ id: result.user.person.id, forename: result.user.person.forename, surname: result.user.person.surname });
             document.stage = stage;
-            document.period = result.enrollment[0].academic_term.start_date.getFullYear().toString() + " - " + result.enrollment[0].academic_term.end_date.getFullYear().toString();
+            document.period = result.enrollment[result.enrollment.length - 1].academic_term.start_date.getFullYear().toString() + " - " + result.enrollment[0].academic_term.end_date.getFullYear().toString();
             return document;
         });
     }

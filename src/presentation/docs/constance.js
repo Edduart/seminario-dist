@@ -60,7 +60,7 @@ function BuildConstance(dataCB, endCB, infor, surname, forename, period, etapa, 
     doc.font('Times-Roman', 18).text(surname + ', ' + forename, { align: 'center' });
     doc.moveDown();
     doc.moveDown();
-    doc.font('Times-Roman', 12).text("Portador de la C.I. Nº:" + infor + " está inscrito en el lapso académico " + period + ", de la " + etapa + ".", {
+    doc.font('Times-Roman', 12).text("Portador de la C.I. Nº:" + infor + " está inscrito en el lapso académico " + period + ", de " + etapa + ".", {
         indent: 30
     });
     doc.moveDown();

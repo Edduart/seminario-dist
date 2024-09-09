@@ -45,8 +45,7 @@ class SeminarianControler {
             });
         };
         this.getCartaCulminacione = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            new domain_1.GetByIDCulminadoSeminarianUseCase(this.repository)
-                .execute(req.params.id)
+            new domain_1.GetByIDCulminadoSeminarianUseCase(this.repository).execute(req.params.id)
                 .then((data) => {
                 const line = res.writeHead(200, {
                     "Content-Type": "application/pdf",
@@ -72,8 +71,8 @@ class SeminarianControler {
                 (0, constance_1.BuildConstance)((data) => line.write(data), () => line.end(), result.id, result.surname, result.forename, result.period, result.stage, req.query.nombre, req.query.cedula);
             })
                 .catch((error) => {
-                console.log(error);
-                res.send(error);
+                console.log("error creado la carta" + error);
+                res.status(404).json({ error: "Seminarian might not exists" }).send();
             });
         });
         this.get = (req, res) => __awaiter(this, void 0, void 0, function* () {
