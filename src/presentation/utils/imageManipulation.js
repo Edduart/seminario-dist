@@ -50,7 +50,7 @@ function setDefaultProfileImage(destinationFilePath) {
         console.log("running copy");
         try {
             const readDefaultImage = yield fs_1.default.readFileSync(defaultProfileImage);
-            yield fs_1.default.writeFileSync(destinationFilePath + ".jpeg", readDefaultImage);
+            yield fs_1.default.writeFileSync(destinationFilePath, readDefaultImage);
         }
         catch (error) {
             return error;

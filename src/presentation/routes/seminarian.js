@@ -28,7 +28,7 @@ router.post("/create/:id", TokenValidator_1.ValidatorTo.ValidarTokenH, (req, res
         }
         else {
             if (!req.file) {
-                const preparePath = "images" + req.baseUrl + req.url;
+                const preparePath = "images" + req.baseUrl + req.url + ".jpeg";
                 const newImagePath = preparePath.replace("/create/", "/");
                 req.body.ayuda = newImagePath;
                 console.log("no file", req.body.ayuda);
