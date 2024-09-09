@@ -6,15 +6,21 @@ class HorarioController {
     constructor(horariorepository) {
         this.horariorepository = horariorepository;
         this.Get = (req, res) => {
-            console.log(req.query);
-            let id = req.query.id;
-            if (id != undefined)
-                id = +id;
-            console.log(id);
-            new domain_1.HorarioGetUseCase(this.horariorepository)
-                .execute(id)
-                .then((horarios) => res.json(horarios))
-                .catch((error) => res.status(400).json({ error }));
+            try {
+                let id = undefined;
+                if (req.query.id) {
+                    id = req.query.id;
+                    if (id != undefined)
+                        id = +id;
+                }
+                new domain_1.HorarioGetUseCase(this.horariorepository)
+                    .execute(id)
+                    .then((horarios) => res.json(horarios))
+                    .catch((error) => res.status(400).json({ error }));
+            }
+            catch (err) {
+                res.status(400).json({ err });
+            }
         };
         this.Update = (req, res) => {
             try {

@@ -30,7 +30,7 @@ class UserDataSourceImplementation {
     getById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const userById = yield postgres_1.prisma.user.findUnique({
-                where: { person_id: id },
+                where: { person_id: id, role: { NOT: { name: "SUPERADMIN" } } },
                 select: {
                     person: { select: { id: true, forename: true, surname: true } },
                     seminarian: {

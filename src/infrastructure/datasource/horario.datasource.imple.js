@@ -15,16 +15,20 @@ const domain_1 = require("../../domain");
 class HorarioDataSourceImplementation {
     get(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(id);
             const results = yield postgres_1.prisma.horarios.findMany({
                 where: {
                     ID: id,
                 },
             });
-            const horarios = results.map((element) => {
-                return domain_1.HorarioEntity.fromObject(element);
-            });
-            return horarios;
+            try {
+                const horarios = results.map((element) => {
+                    return domain_1.HorarioEntity.fromObject(element);
+                });
+                return horarios;
+            }
+            catch (error) {
+                throw `error in map ${error}`;
+            }
         });
     }
     updateById(data) {

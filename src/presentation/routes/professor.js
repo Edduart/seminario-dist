@@ -12,7 +12,7 @@ const dataSource = new infrastructure_1.ProfessorDataSourceImpl();
 const repository = new infrastructure_1.ProfessorRepositoryImpl(dataSource);
 const professorController = new professor_controller_1.ProfessorController(repository, instructorRepository);
 router.get("/ficha/:id", TokenValidator_1.ValidatorTo.ValidarToken, professorController.ficha);
-router.get("/", TokenValidator_1.ValidatorTo.ValidarToken, professorController.get);
+router.get("/:id", TokenValidator_1.ValidatorTo.ValidarToken, professorController.get);
 router.post("/:id", TokenValidator_1.ValidatorTo.ValidarTokenH, (req, res) => {
     upload_service_1.uploadFile.single("file")(req, res, (err) => {
         if (err) {

@@ -258,7 +258,7 @@ model test {
   maximum_score    Decimal      @db.Decimal(5, 2)
   instruction      instruction  @relation(fields: [subject_id, academic_term_id], references: [subject_id, academic_term_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_instruction")
   test_score       test_score[]
-
+  @@unique([academic_term_id, subject_id])
   @@index([subject_id, academic_term_id], map: "fk_test_instruction_idx")
   @@index([subject_id, academic_term_id], map: "fk_test_instructor_idx")
 }
@@ -299,6 +299,12 @@ model bitacora {
   action  bitacora_action
   table   String          @db.VarChar(100)
   date    DateTime        @db.DateTime(0)
+}
+
+model horarios {
+  ID    Int     @id @default(autoincrement())
+  Curso String  @db.VarChar(200)
+  link  String? @db.Text
 }
 
 enum basic_worker_job_position {
