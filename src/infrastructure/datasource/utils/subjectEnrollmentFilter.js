@@ -20,11 +20,14 @@ class EnrollmentSubjectFilter {
                     select: { stage: true },
                 });
                 console.log({ getSeminarianStage });
-                const subjects = yield postgres_1.prisma.subject.findMany({
-                    where: { status: true, course: { stage_id: getSeminarianStage === null || getSeminarianStage === void 0 ? void 0 : getSeminarianStage.stage } },
+                const subjectsWithPrecedent = yield postgres_1.prisma.subject.findMany({
+                    where: {
+                        status: true,
+                        course: { stage_id: getSeminarianStage === null || getSeminarianStage === void 0 ? void 0 : getSeminarianStage.stage },
+                    },
+                    select: { precedent: true },
                 });
-                console.log({ subjects });
-                const subjectsWithPrecedent = subjects
+                const subjectsWithPrecedentMap = subjectsWithPrecedent
                     .filter((precedent) => precedent.precedent)
                     .map((subject) => subject.precedent);
                 console.log({ subjectsWithPrecedent });
@@ -34,13 +37,17 @@ class EnrollmentSubjectFilter {
                             {
                                 seminarian_id: id,
                                 status: "REPROBADO",
-                                subject_id: { in: subjectsWithPrecedent },
+                                subject_id: { in: subjectsWithPrecedentMap },
                             },
                         ],
                     },
                     select: { subject_id: true },
                 });
                 console.log({ reprovedSubjects });
+                const precedentCourse = yield postgres_1.prisma.subject.findMany({
+                    where: { id: { in: subjectsWithPrecedentMap } },
+                    select: { id: true, course_id: true },
+                });
                 const enrolledSubjectsCompleteList = enrollmentStatus.map((enrolledSubjects) => ({
                     id: enrolledSubjects.subject_id,
                     status: enrolledSubjects.status,
@@ -132,8 +139,41 @@ class EnrollmentSubjectFilter {
                                                 console.log("subject was reproved, so can be added", subject.id);
                                                 return true;
                                             }
+                                            else if (precedentCourse
+                                                .filter((id) => {
+                                                if (id.id == subject.precedent) {
+                                                    return true;
+                                                }
+                                            })
+                                                .map((id) => id.id)
+                                                .includes(subject.precedent)) {
+                                                console.log("actual list precedent", precedentCourse
+                                                    .filter((id) => {
+                                                    if (id.id == subject.precedent) {
+                                                        return true;
+                                                    }
+                                                })
+                                                    .map((id) => id.id));
+                                                if (precedentCourse
+                                                    .filter((id) => {
+                                                    if (id.id == subject.precedent) {
+                                                        return true;
+                                                    }
+                                                })
+                                                    .map((courseId) => courseId.course_id)
+                                                    .includes(subject.course.id)) {
+                                                    console.log(`precedent of the same course, so added, actual subject: ID ${subject.id}, COURSE: ${subject.course.id}, precedent course ID: ${precedentCourse
+                                                        .filter((id) => {
+                                                        if (id.id == subject.precedent && id.course_id == subject.course.id) {
+                                                            return true;
+                                                        }
+                                                    })
+                                                        .map((id) => id.course_id)}`);
+                                                    return true;
+                                                }
+                                            }
                                             else {
-                                                console.log("no reproved, so no added");
+                                                console.log("no reproved and no same course, so no added");
                                             }
                                         }
                                     }
@@ -302,7 +342,7 @@ class EnrollmentSubjectFilter {
             }
             catch (error) {
                 console.log(error);
-                throw error;
+                throw `Error while seminarian enrollment calculation, ${error}`;
             }
         });
     }

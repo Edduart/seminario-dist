@@ -9,7 +9,7 @@ const router = (0, express_1.Router)();
 const datasource = new infrastructure_1.InstructorDataSourceImple();
 const instructorRepository = new infrastructure_2.InstructorRepositoryImpl(datasource);
 const instructorController = new instructor_controller_1.InstructorController(instructorRepository);
-router.get("/ficha/:id", TokenValidator_1.ValidatorTo.ValidarToken, instructorController.ficha);
+router.get("/ficha/:id", instructorController.ficha);
 router.post("/", TokenValidator_1.ValidatorTo.ValidarToken, instructorController.createInstructor);
 router.get("/", TokenValidator_1.ValidatorTo.ValidarToken, instructorController.getInstructors);
 router.get("/:id", TokenValidator_1.ValidatorTo.ValidarToken, instructorController.getInstructorById);

@@ -52,7 +52,7 @@ function UpdatePersonFunc(data) {
                     return {
                         person_id: data.id,
                         phone_number: actual.phone_number,
-                        description: actual.phone_number,
+                        description: actual.description,
                     };
                 });
                 yield postgres_1.prisma.phone_number.createMany({
@@ -125,7 +125,7 @@ function CreatePersonFunc(data) {
                     return {
                         person_id: data.id,
                         phone_number: actual.phone_number,
-                        description: actual.phone_number,
+                        description: actual.description,
                     };
                 });
                 yield postgres_1.prisma.phone_number.createMany({

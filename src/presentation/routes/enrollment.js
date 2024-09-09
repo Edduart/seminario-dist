@@ -9,7 +9,7 @@ const router = (0, express_1.Router)();
 const dataSource = new datasource_1.EnrollmentDataSourceImpl();
 const enrollmentRepository = new repositories_1.EnrollmentRepositoryImpl(dataSource);
 const enrollmentController = new enrollment_controller_1.EnrollmentController(enrollmentRepository);
-router.get("/count", TokenValidator_1.ValidatorTo.ValidarToken, enrollmentController.Getcounts);
+router.get("/count", enrollmentController.Getcounts);
 router.get("/academic-status/:seminarian_id", TokenValidator_1.ValidatorTo.ValidarToken, enrollmentController.getAcademicStatus);
 router.get("/seminarian-stage/", TokenValidator_1.ValidatorTo.ValidarToken, enrollmentController.getStageOfSeminarian);
 router.get("/equivalency-list/:seminarian_id", TokenValidator_1.ValidatorTo.ValidarToken, enrollmentController.getSubjectAllowToEnrollEquivalency);
