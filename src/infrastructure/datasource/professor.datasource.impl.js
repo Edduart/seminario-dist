@@ -64,23 +64,25 @@ class ProfessorDataSourceImpl {
             });
             if (professorExist == null)
                 throw "Professor doesn't exist!";
-            const getInstructorById = yield postgres_1.prisma.instructor.findUnique({
-                where: { professor_id: dto.person.id },
-            });
-            if (!getInstructorById)
-                throw "Instructor with ID: ${id} no found";
-            const instructorPositions = yield postgres_1.prisma.instructor.findMany({
-                where: {
-                    NOT: { instructor_position: "DESACTIVADO" },
-                },
-                select: { instructor_position: true },
-            });
-            const filteredInstructorPosition = filterEnum_1.FilterEnum.filterInstructorPosition(instructorPositions);
-            console.log({ msj: "inside update", filteredInstructorPosition });
             if (dto.instructor_position) {
-                if (!(dto.instructor_position == getInstructorById.instructor_position)) {
-                    if (!Object.keys(filteredInstructorPosition).includes(dto.instructor_position)) {
-                        throw "there is other instructor with the same position";
+                const getInstructorById = yield postgres_1.prisma.instructor.findUnique({
+                    where: { professor_id: dto.person.id },
+                });
+                if (!getInstructorById)
+                    throw `instructor with ID: ${dto.instructor_position} no found`;
+                const instructorPositions = yield postgres_1.prisma.instructor.findMany({
+                    where: {
+                        NOT: { instructor_position: "DESACTIVADO" },
+                    },
+                    select: { instructor_position: true },
+                });
+                const filteredInstructorPosition = filterEnum_1.FilterEnum.filterInstructorPosition(instructorPositions);
+                console.log({ msj: "inside update", filteredInstructorPosition });
+                if (dto.instructor_position) {
+                    if (!(dto.instructor_position == getInstructorById.instructor_position)) {
+                        if (!Object.keys(filteredInstructorPosition).includes(dto.instructor_position)) {
+                            throw "there is other instructor with the same position";
+                        }
                     }
                 }
             }
