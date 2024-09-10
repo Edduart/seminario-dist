@@ -134,6 +134,12 @@ class ProfessorDataSourceImpl {
                 const checkInstructorPosition = yield postgres_1.prisma.instructor.findMany({
                     where: {
                         instructor_position: createDto.instructor_position,
+                        NOT: {
+                            OR: [
+                                { instructor_position: "ASESOR_PROPEDEUTICO" },
+                                { instructor_position: "DIRECTOR_ESPIRITUAL" },
+                            ],
+                        },
                     },
                 });
                 if (checkInstructorPosition.length > 0)
