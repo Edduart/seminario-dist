@@ -39,12 +39,12 @@ class WorkerDataSourceImpl {
                     throw `worker not found`;
                 }
                 yield (0, user_functions_1.UpdatePersonFunc)(data.persona);
-                const perona_actualizar = postgres_1.prisma.basic_worker.update({
+                const perona_actualizar = yield tx.basic_worker.update({
                     where: {
                         person_id: data.persona.id,
                     },
                     data: {
-                        job_position: data.job_position,
+                        job_position: data.job_position.toUpperCase(),
                     },
                 });
                 return yield this.get(data.persona.id, undefined);
@@ -167,7 +167,8 @@ class WorkerDataSourceImpl {
                 });
                 const socials = Worker.social_media.map((sociales) => {
                     return domain_1.SocialMediaEntity.fromdb({
-                        category: sociales.social_media_category,
+                        category: sociales.social_media_category_social_media_social_media_categoryTosocial_media_category.description,
+                        social_media_category: sociales.social_media_category,
                         link: sociales.link,
                     });
                 });

@@ -43,7 +43,11 @@ function parseUserData(req, person) {
             const degrees = origin.user.degree != null
                 ? origin.user.degree.map((degree_Actual) => new domain_1.CreateDegree(origin.persona.id, degree_Actual.description.toUpperCase(), degree_Actual.link))
                 : undefined;
-            const userData = new domain_1.CreateUserDTO(person, degrees, origin.user.parish_id, origin.user.role, hashedPassword);
+            const parsed_parish_id = Number(origin.user.parish_id);
+            if (Number.isNaN(parsed_parish_id) || !Number.isInteger(parsed_parish_id) || parsed_parish_id < 0) {
+                throw new Error("Parish id invalid, must be a non negative integer");
+            }
+            const userData = new domain_1.CreateUserDTO(person, degrees, parsed_parish_id, origin.user.role, hashedPassword);
             return userData;
         }
         catch (error) {

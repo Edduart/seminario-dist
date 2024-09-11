@@ -19,15 +19,6 @@ function BuildNotas(dataCB, endCB, data) {
         var _a, _b;
         const doc = new pdfkit_table_1.default({ font: 'Times-Roman' });
         doc.font('Times-Roman', 12);
-        try {
-            doc.image('./images/assests/backgproundcolored.png', 25, 65, {
-                fit: [100, 100],
-                align: 'right',
-            });
-        }
-        catch (error) {
-            doc.text('Error en el icono', 25, 65);
-        }
         doc.moveDown();
         doc.moveDown();
         doc.font('Times-Bold', 12).text("Arquidiósis de Barquisimeto", { align: 'center' });
@@ -70,10 +61,11 @@ function BuildNotas(dataCB, endCB, data) {
                     ((_b = element.end_date) === null || _b === void 0 ? void 0 : _b.split("-")[0]),
             ]);
         });
+        doc.font('Times-Roman', 16);
         const table = {
             headers: [{ label: '   Asignatura', headerColor: "#FFFFFF" }, { label: '  Nota', property: 'nota', headerColor: '#FFFFFF' },
                 { label: '  Período', property: 'periodo', headerColor: '#FFFFFF' }],
-            rows: materias
+            rows: materias,
         };
         yield doc.table(table, {
             divider: {
@@ -81,7 +73,9 @@ function BuildNotas(dataCB, endCB, data) {
                 header: { disabled: true }
             },
             columnSpacing: 10,
-            columnsSize: [350, 40, 50]
+            columnsSize: [350, 40, 50],
+            prepareHeader: () => doc.font('Times-Bold', 12),
+            prepareRow: (row, indexColumn, indexRow, rectRow, rectCell) => doc.font('Times-Roman', 12),
         });
         doc.font('Times-Roman', 12).text("La escala de calificaciones es del UNO (01) al DIEZ (10) y la nota mínima aprobatoria es de SEIS (06) puntos.", { indent: 30, });
         doc.moveDown();

@@ -18,15 +18,6 @@ function BuildPensum(dataCB, endCB, data) {
     return __awaiter(this, void 0, void 0, function* () {
         const doc = new pdfkit_table_1.default({ font: 'Times-Roman' });
         try {
-            doc.image('./images/assests/backgproundcolored.png', 25, 65, {
-                fit: [100, 100],
-                align: 'right',
-            });
-        }
-        catch (error) {
-            doc.text('Error en el icono', 25, 65);
-        }
-        try {
             doc.image('./images/assests/shield.jpg', 500, 65, {
                 fit: [100, 100],
                 align: 'right',

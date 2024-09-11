@@ -449,11 +449,14 @@ class SeminarianDataSourceImpl {
             }
             catch (error) {
                 console.log(error);
-                yield postgres_1.prisma.phone_number.deleteMany({ where: { person_id: data.user.person.id } });
-                yield postgres_1.prisma.social_media.deleteMany({ where: { person_id: data.user.person.id } });
-                yield postgres_1.prisma.academic_degree.deleteMany({ where: { user_id: data.user.person.id } });
-                yield postgres_1.prisma.user.deleteMany({ where: { person_id: data.user.person.id } });
-                yield postgres_1.prisma.person.delete({ where: { id: data.user.person.id } });
+                try {
+                    yield postgres_1.prisma.phone_number.deleteMany({ where: { person_id: data.user.person.id } });
+                    yield postgres_1.prisma.social_media.deleteMany({ where: { person_id: data.user.person.id } });
+                    yield postgres_1.prisma.academic_degree.deleteMany({ where: { user_id: data.user.person.id } });
+                    yield postgres_1.prisma.user.deleteMany({ where: { person_id: data.user.person.id } });
+                    yield postgres_1.prisma.person.delete({ where: { id: data.user.person.id } });
+                }
+                catch (error2) { }
                 throw new Error("Unable to create seminarian" + error);
             }
         });

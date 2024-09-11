@@ -49,6 +49,7 @@ router.put("/:id", TokenValidator_1.ValidatorTo.ValidarTokenH, (req, res, next) 
         }
     }));
 });
+router.get("/ficha/:id", WorkerControl.Ficha);
 router.get("/", TokenValidator_1.ValidatorTo.ValidarToken, WorkerControl.get);
 router.delete("/:id", TokenValidator_1.ValidatorTo.ValidarToken, WorkerControl.deleteRole);
 module.exports = router;

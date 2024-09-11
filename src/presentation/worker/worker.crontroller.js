@@ -18,6 +18,7 @@ const fs_1 = __importDefault(require("fs"));
 const permissionValidator_1 = require("../services/permissionValidator");
 const parseData_1 = require("../utils/parseData");
 const imageManipulation_1 = require("../../presentation/utils/imageManipulation");
+const worker_ficha_1 = require("../docs/worker.ficha");
 class WorkerControler {
     constructor(repository) {
         this.repository = repository;
@@ -38,6 +39,22 @@ class WorkerControler {
                 res.status(400).json("Acces denied");
             }
         });
+        this.Ficha = (req, res) => {
+            const id = typeof req.params.id === "string" &&
+                req.params.id.length < 20 &&
+                req.params.id.length > 1
+                ? req.params.id
+                : undefined;
+            new domain_1.GetWorker(this.repository).execute(id, undefined)
+                .then((infoworker) => {
+                const line = res.writeHead(200, {
+                    "Content-Type": "application/pdf",
+                    "Content-Disposition": "inline; filename=ficha.pdf",
+                });
+                (0, worker_ficha_1.BuildFichaWorker)((data) => line.write(data), () => line.end(), infoworker);
+            })
+                .catch((error) => res.status(400).json({ error }));
+        };
         this.get = (req, res) => {
             const id = typeof req.query.id === "string" &&
                 req.query.id.length < 20 &&

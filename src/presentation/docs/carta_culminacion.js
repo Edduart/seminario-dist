@@ -8,14 +8,6 @@ const pdfkit_1 = __importDefault(require("pdfkit"));
 const Notas_Certificadas_1 = require("./Notas.Certificadas");
 function BuildPDF(dataCB, endCB, infor, surname, forename, nombre_emisor, cedula_emisor) {
     const doc = new pdfkit_1.default({ font: 'Times-Roman' });
-    try {
-        doc.image("./images/assests/backgpround.png", 110, 150, {
-            align: 'center',
-        });
-    }
-    catch (error) {
-        doc.text('Error en el fondo', 10, 10);
-    }
     surname = surname.toLowerCase();
     let nombre = surname.split(" ");
     let surname_fixed = "";
