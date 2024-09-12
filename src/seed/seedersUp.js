@@ -144,58 +144,6 @@ function main() {
                         status: client_1.academic_term_status.EQUIVALENCIAS,
                     },
                 });
-                yield delay(1000);
-                data_1.subjectNO.forEach((element) => __awaiter(this, void 0, void 0, function* () {
-                    yield postgres_1.prisma.subject.upsert({
-                        where: { id: element.id },
-                        update: {},
-                        create: element,
-                    });
-                }));
-                yield delay(1000);
-                console.log("fixing precedents");
-                data_1.subject.forEach((Element) => __awaiter(this, void 0, void 0, function* () {
-                    yield postgres_1.prisma.subject.update({
-                        where: { id: Element.id },
-                        data: {
-                            precedent: Element.precedent,
-                        },
-                    });
-                }));
-                yield delay(1000);
-                for (let i = 1; i < data_1.subjectNO.length; i++) {
-                    yield postgres_1.prisma.instruction.upsert({
-                        where: {
-                            subject_id_academic_term_id: {
-                                academic_term_id: 1,
-                                subject_id: i,
-                            },
-                        },
-                        update: {},
-                        create: {
-                            subject_id: i,
-                            academic_term_id: 1,
-                        }, include: {}
-                    });
-                }
-                yield delay(1000);
-                for (let i = 1; i < data_1.subjectNO.length; i++) {
-                    yield postgres_1.prisma.test.upsert({
-                        where: {
-                            academic_term_id_subject_id: {
-                                academic_term_id: 1,
-                                subject_id: i
-                            }
-                        }, update: {},
-                        create: {
-                            academic_term_id: 1,
-                            subject_id: i,
-                            description: "EXAMEN UNICO",
-                            status: true,
-                            maximum_score: 100.0
-                        }
-                    });
-                }
                 console.log("seeder completed");
             }));
         }

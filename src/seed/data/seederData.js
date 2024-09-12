@@ -15,5 +15,4 @@ exports.modelData = {
     role_permission: { model: postgres_1.prisma.role_permission.createMany, data: _1.rolePermissions, },
     person: { model: postgres_1.prisma.person.createMany, data: _1.person },
     user: { model: postgres_1.prisma.user.createMany, data: _1.user },
-    subject: { model: postgres_1.prisma.subject.createMany, data: _1.subject },
 };
